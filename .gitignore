@@ -1,3 +1,7 @@
+# Fichiers à ne pas sauvegarder.
+GoogleService-Info.plist
+History.md
+
 # Xcode
 ## User settings
 xcuserdata/

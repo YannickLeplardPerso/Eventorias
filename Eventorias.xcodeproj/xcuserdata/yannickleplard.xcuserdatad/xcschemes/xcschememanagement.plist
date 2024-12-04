@@ -7,7 +7,30 @@
 		<key>Eventorias.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
+		</dict>
+		<key>Promises (Playground).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>2A1B70032CE10D7000089D4F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2A1B70132CE10D7100089D4F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2A1B701D2CE10D7100089D4F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
