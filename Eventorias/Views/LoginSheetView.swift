@@ -15,35 +15,44 @@ struct LoginSheetView: View {
     
     @State private var email = ""
     @State private var password = ""
+    @State private var name = ""
     @State private var isSignUp = false
     
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                TextField("Email", text: $email)
-                    .foregroundColor(.evMain)
-                    .padding(6)
-                    .background(.evBackground)
-                    .cornerRadius(5)
+                if isSignUp {
+                    CustomTextFieldComponent(
+                        title: "Name",
+                        placeholder: "Enter your first name and last name",
+                        text: $name
+                    )
                     .padding(.horizontal)
-                    .autocapitalization(.none)
-                    .keyboardType(.emailAddress)
-                    .accessibility(label: Text("Email input field"))
+                }
                 
-                SecureField("Password", text: $password)
-                    .foregroundColor(.evMain)
-                    .padding(6)
-                    .background(.evBackground)
-                    .cornerRadius(6)
-                    .padding(.horizontal)
-                    .accessibility(label: Text("Password input field"))
+                CustomTextFieldComponent(
+                    title: "Email",
+                    placeholder: "Enter your email",
+                    text: $email
+                )
+                .padding(.horizontal)
+                .textInputAutocapitalization(.never)
+                .keyboardType(.emailAddress)
+                
+                CustomTextFieldComponent(
+                    title: "Password",
+                    placeholder: "Enter your password",
+                    text: $password,
+                    isSecure: true
+                )
+                .padding(.horizontal)
                 
                 if viewModel.isLoading {
                     ProgressView()
                 } else {
                     Button(action: {
                         if isSignUp {
-                            viewModel.signUp(email: email, password: password) {
+                            viewModel.signUp(email: email, password: password, name: name) {
                                 isPresented = false
                             }
                         } else {

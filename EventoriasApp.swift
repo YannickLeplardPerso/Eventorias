@@ -12,6 +12,7 @@ import FirebaseFirestore
 @main
 struct EventoriasApp: App {
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var profileViewModel = ProfileViewModel()
     @State private var selectedTab = 0
     
     init() {
@@ -30,7 +31,7 @@ struct EventoriasApp: App {
                             }
                             .tag(0)
                         
-                        ProfileView()
+                        ProfileView(viewModel: profileViewModel)
                             .tabItem {
                                 Image(systemName: "person")
                                 Text("Profile")

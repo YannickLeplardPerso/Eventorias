@@ -12,6 +12,7 @@ struct CustomTextFieldComponent: View {
     let placeholder: String
     @Binding var text: String
     var isMultiline: Bool = false
+    var isSecure: Bool = false
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -27,6 +28,22 @@ struct CustomTextFieldComponent: View {
                         .padding(.bottom, 8)
                         .background(
                             // Pour positionner le titre
+                            Text(title)
+                                .font(.system(size: 12))
+                                .foregroundColor(.evGraybis)
+                                .padding(.leading, 12)
+                                .padding(.top, 8)
+                                .frame(maxWidth: .infinity, alignment: .leading),
+                            alignment: .topLeading
+                        )
+                } else if isSecure {
+                    SecureField(placeholder, text: $text)
+                        .font(.system(size: 16))
+                        .foregroundColor(.evGray)
+                        .padding(.horizontal, 12)
+                        .padding(.top, 24)
+                        .padding(.bottom, 8)
+                        .background(
                             Text(title)
                                 .font(.system(size: 12))
                                 .foregroundColor(.evGraybis)
@@ -75,6 +92,13 @@ struct CustomTextFieldComponent_Previews: PreviewProvider {
                placeholder: "Enter long text",
                text: .constant("This is some example text\ndzdzd zdz \nococez zdc z "),
                isMultiline: true
+           )
+           
+           CustomTextFieldComponent(
+               title: "Secret field",
+               placeholder: "Enter your password",
+               text: .constant("password"),
+               isSecure: true
            )
        }
        .padding()

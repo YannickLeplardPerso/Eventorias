@@ -12,6 +12,7 @@
 		2A892EA02CE4E41800BF0B45 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2A892E9F2CE4E41800BF0B45 /* FirebaseAuth */; };
 		2A892EA22CE4E41800BF0B45 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 2A892EA12CE4E41800BF0B45 /* FirebaseCore */; };
 		2A892EA42CE4E48B00BF0B45 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A892EA32CE4E48B00BF0B45 /* GoogleService-Info.plist */; };
+		2ABB23862D03124F004DB214 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 2ABB23852D03124F004DB214 /* FirebaseStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A892EA22CE4E41800BF0B45 /* FirebaseCore in Frameworks */,
+				2ABB23862D03124F004DB214 /* FirebaseStorage in Frameworks */,
 				2A892EA02CE4E41800BF0B45 /* FirebaseAuth in Frameworks */,
 				2A77812A2D0055F60042B1B5 /* FirebaseFirestore in Frameworks */,
 			);
@@ -94,6 +96,7 @@
 				2A1B70062CE10D7000089D4F /* Eventorias */,
 				2A1B70172CE10D7100089D4F /* EventoriasTests */,
 				2A1B70212CE10D7100089D4F /* EventoriasUITests */,
+				2ABB23842D03124F004DB214 /* Frameworks */,
 				2A1B70052CE10D7000089D4F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -106,6 +109,13 @@
 				2A1B701E2CE10D7100089D4F /* EventoriasUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2ABB23842D03124F004DB214 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		2AEEE0462CF4A9720050AF8D /* ignore */ = {
@@ -140,6 +150,7 @@
 				2A892E9F2CE4E41800BF0B45 /* FirebaseAuth */,
 				2A892EA12CE4E41800BF0B45 /* FirebaseCore */,
 				2A7781292D0055F60042B1B5 /* FirebaseFirestore */,
+				2ABB23852D03124F004DB214 /* FirebaseStorage */,
 			);
 			productName = Eventorias;
 			productReference = 2A1B70042CE10D7000089D4F /* Eventorias.app */;
@@ -427,7 +438,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "3 en cours";
+				CURRENT_PROJECT_VERSION = "4 en cours";
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
@@ -460,7 +471,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "3 en cours";
+				CURRENT_PROJECT_VERSION = "4 en cours";
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
@@ -626,6 +637,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2A892E9E2CE4E41800BF0B45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCore;
+		};
+		2ABB23852D03124F004DB214 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2A892E9E2CE4E41800BF0B45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
