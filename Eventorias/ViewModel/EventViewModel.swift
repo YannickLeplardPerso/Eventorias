@@ -14,9 +14,23 @@ import FirebaseFirestore
 
 class EventViewModel: ObservableObject {
     @Published var events: [Event] = []
+    @Published var newEvent = Event(
+        title: "",
+        description: "",
+        date: Date(),
+        location: "",
+        category: .other,
+        creatorId: "",
+        createdAt: Date()
+    )
     @Published var errorMessage = ""
     @Published var showError = false
+    
     private let db = Firestore.firestore()
+    
+    var isFormValid: Bool {
+        !newEvent.title.isEmpty && !newEvent.location.isEmpty
+    }
     
     func fetchEvents() {
         db.collection("events")
@@ -34,19 +48,17 @@ class EventViewModel: ObservableObject {
             }
     }
     
-    func addEvent(title: String, description: String, date: Date, location: String, category: EventCategory) {
-        let newEvent = Event(
-            title: title,
-            description: description,
-            date: date,
-            location: location,
-            category: category,
-            creatorId: Auth.auth().currentUser?.uid ?? "",
-            createdAt: Date()
-        )
+    func addEvent(completion: @escaping () -> Void) {
+        guard isFormValid else { return }
+        
+        newEvent.creatorId = Auth.auth().currentUser?.uid ?? ""
+        newEvent.createdAt = Date()
         
         do {
             try db.collection("events").addDocument(from: newEvent)
+            // Réinitialiser newEvent pour le prochain événement
+            newEvent = Event(title: "", description: "", date: Date(), location: "", category: .other, creatorId: "", createdAt: Date())
+            completion()
         } catch {
             errorMessage = error.localizedDescription
             showError = true

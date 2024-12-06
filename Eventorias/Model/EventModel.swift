@@ -14,8 +14,8 @@ import FirebaseFirestore
 
 enum EventCategory: String, Codable, CaseIterable {
     case music = "Music"
-    case sports = "Sports"
     case culture = "Culture"
+    case sports = "Sport"
     case business = "Business"
     case other = "Other"
 }

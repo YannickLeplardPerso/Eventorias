@@ -17,33 +17,28 @@ struct EventoriasApp: App {
     init() {
         FirebaseApp.configure()
     }
-    
+
     var body: some Scene {
         WindowGroup {
             if authViewModel.isAuthenticated {
-                TabView(selection: $selectedTab) {
-                    Spacer()
-                    NavigationStack {
+                NavigationStack {
+                    TabView(selection: $selectedTab) {
                         EventListView()
-                    }
-                    .tabItem {
-                        Image(systemName: "calendar")
-                        Text("Events")
-                    }
-                    .tag(0)
-                    
-                    NavigationStack {
+                            .tabItem {
+                                Image(systemName: "calendar")
+                                Text("Events")
+                            }
+                            .tag(0)
+                        
                         ProfileView()
+                            .tabItem {
+                                Image(systemName: "person")
+                                Text("Profile")
+                            }
+                            .tag(1)
                     }
-                    .tabItem {
-                        Image(systemName: "person")
-                        Text("Profile")
-                    }
-                    .tag(1)
-                    
-                    Spacer()
+                    .accentColor(.evRed)
                 }
-                .accentColor(.evRed)
             } else {
                 LoginView(viewModel: authViewModel)
             }

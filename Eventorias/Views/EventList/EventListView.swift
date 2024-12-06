@@ -12,7 +12,6 @@ import SwiftUI
 struct EventListView: View {
     @StateObject private var viewModel = EventViewModel()
     @State private var searchText = ""
-    @State private var showingAddEvent = false
     @State private var showingSortOptions = false
     @State private var selectedSortOption: SortOption = .date
     
@@ -33,9 +32,18 @@ struct EventListView: View {
                 .padding(.horizontal)
                 
                 List {
-                    Text("No events yet")
-                    .foregroundColor(.evGray)
+                    if viewModel.events.isEmpty {
+                        Text("No events yet")
+                            .foregroundColor(.evGray)
+                    } else {
+                        ForEach(viewModel.events) { event in
+                            NavigationLink(destination: EventDetailView(event: event)) {
+                                EventCardComponent(event: event)
+                            }
+                        }
+                    }
                 }
+                .listStyle(PlainListStyle())
             }
             
             // Bouton flottant
@@ -43,7 +51,8 @@ struct EventListView: View {
                 Spacer()
                 HStack {
                     Spacer()
-                    Button(action: { showingAddEvent = true }) {
+                    
+                    NavigationLink(destination: AddEventView(viewModel: viewModel)) {
                         Image(systemName: "plus")
                             .font(.system(size: 18))
                             .foregroundColor(.evMain)
@@ -57,8 +66,8 @@ struct EventListView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingAddEvent) {
-            AddEventView(viewModel: viewModel)
+        .onAppear {
+            viewModel.fetchEvents()
         }
         .actionSheet(isPresented: $showingSortOptions) {
             ActionSheet(
