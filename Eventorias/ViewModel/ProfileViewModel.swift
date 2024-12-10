@@ -9,6 +9,7 @@ import SwiftUI
 
 import FirebaseAuth
 import FirebaseStorage
+import FirebaseFirestore
 
 
 
@@ -31,14 +32,9 @@ class ProfileViewModel: ObservableObject {
         if let user = Auth.auth().currentUser {
             userEmail = user.email ?? ""
             userName = user.displayName ?? ""
-            print("User loaded: \(self.userName), \(self.userEmail)")
-            
             profileImageUrl = user.photoURL?.absoluteString
         }
     }
-    
-    
-    
     
     func updateUserProfile() {
         guard let user = Auth.auth().currentUser else { return }
@@ -90,11 +86,25 @@ class ProfileViewModel: ObservableObject {
         let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
         changeRequest?.photoURL = url
         changeRequest?.commitChanges { [weak self] error in
-            DispatchQueue.main.async {
-                if let error = error {
+            if let error = error {
+                DispatchQueue.main.async {
                     self?.errorMessage = error.localizedDescription
-                } else {
-                    self?.profileImageUrl = url.absoluteString
+                }
+                return
+            }
+            
+            if let userId = Auth.auth().currentUser?.uid {
+                let db = Firestore.firestore()
+                db.collection("users").document(userId).setData([
+                    "profileImageUrl": url.absoluteString
+                ], merge: true) { error in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            self?.errorMessage = error.localizedDescription
+                        } else {
+                            self?.profileImageUrl = url.absoluteString
+                        }
+                    }
                 }
             }
         }

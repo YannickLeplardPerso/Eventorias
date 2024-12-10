@@ -8,9 +8,14 @@
 import SwiftUI
 import PhotosUI
 
+
+
 struct ProfileView: View {
     @ObservedObject var viewModel: ProfileViewModel
     @State private var selectedItem: PhotosPickerItem? = nil
+    @State private var showImagePicker = false
+    @State private var showActionSheet = false
+    @State private var showLibrary = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -21,7 +26,9 @@ struct ProfileView: View {
                 
                 Spacer()
                 
-                PhotosPicker(selection: $selectedItem, matching: .images) {
+                Button {
+                    showActionSheet = true
+                } label: {
                     if let imageUrl = viewModel.profileImageUrl {
                         AsyncImage(url: URL(string: imageUrl)) { image in
                             image
@@ -75,17 +82,30 @@ struct ProfileView: View {
                     
             Spacer()
         }
-        .onChange(of: selectedItem) {
+        .confirmationDialog("Choose Photo", isPresented: $showActionSheet) {
+            Button("Photo Library") {
+                showLibrary = true
+            }
+            
+            Button("Take Photo") {
+                showImagePicker = true
+            }
+            
+            Button("Cancel", role: .cancel) { }
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePickerComponent(selectedImage: $viewModel.selectedImage)
+        }
+        .photosPicker(isPresented: $showLibrary,
+                      selection: $selectedItem,
+                      matching: .images)
+        .onChange(of: selectedItem) { oldValue, newValue in
             Task {
-                if let data = try? await selectedItem?.loadTransferable(type: Data.self),
+                if let data = try? await newValue?.loadTransferable(type: Data.self),
                    let image = UIImage(data: data) {
                     viewModel.selectedImage = image
+                    viewModel.uploadProfileImage(image)
                 }
-            }
-        }
-        .onChange(of: viewModel.selectedImage) { oldImage, newImage in
-            if let image = newImage {
-                viewModel.uploadProfileImage(image)
             }
         }
         .overlay {

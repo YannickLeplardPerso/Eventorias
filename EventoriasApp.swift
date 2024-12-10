@@ -24,6 +24,7 @@ struct EventoriasApp: App {
             if authViewModel.isAuthenticated {
                 NavigationStack {
                     TabView(selection: $selectedTab) {
+                        Spacer()
                         EventListView()
                             .tabItem {
                                 Image(systemName: "calendar")
@@ -37,11 +38,14 @@ struct EventoriasApp: App {
                                 Text("Profile")
                             }
                             .tag(1)
+                        Spacer()
                     }
                     .accentColor(.evRed)
                 }
+                .preferredColorScheme(.dark)
             } else {
                 LoginView(viewModel: authViewModel)
+                    .preferredColorScheme(.dark)
             }
         }
     }

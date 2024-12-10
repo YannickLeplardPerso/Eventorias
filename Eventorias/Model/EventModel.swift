@@ -6,11 +6,9 @@
 //
 
 import Foundation
-
-
-
 import FirebaseFirestore
-//import FirebaseFirestoreSwift
+
+
 
 enum EventCategory: String, Codable, CaseIterable {
     case music = "Music"
@@ -18,6 +16,11 @@ enum EventCategory: String, Codable, CaseIterable {
     case sports = "Sport"
     case business = "Business"
     case other = "Other"
+}
+
+enum SortOption {
+    case date
+    case category
 }
 
 struct Event: Identifiable, Codable {
@@ -28,7 +31,9 @@ struct Event: Identifiable, Codable {
     var location: String
     var category: EventCategory
     var creatorId: String
+    var creatorImageUrl: String?
     var createdAt: Date
+    var imageUrl: String?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -38,7 +43,27 @@ struct Event: Identifiable, Codable {
         case location
         case category
         case creatorId
+        case creatorImageUrl
         case createdAt
+        case imageUrl
+    }
+    
+    var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+//        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.locale = Locale(identifier: "en")
+        return formatter.string(from: date)
+    }
+    
+    var formattedTime: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .medium
+//        formatter.locale = Locale(identifier: "fr_FR")
+        formatter.locale = Locale(identifier: "en")
+        return formatter.string(from: date)
     }
 }
 

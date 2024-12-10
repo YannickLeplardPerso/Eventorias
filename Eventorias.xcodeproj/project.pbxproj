@@ -41,9 +41,22 @@
 		2A8E5BC42CF34A040012EEAF /* history.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = history.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2A8B79B02D08794F00FCBD0C /* Exceptions for "Eventorias" folder in "Eventorias" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2A1B70032CE10D7000089D4F /* Eventorias */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2A1B70062CE10D7000089D4F /* Eventorias */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2A8B79B02D08794F00FCBD0C /* Exceptions for "Eventorias" folder in "Eventorias" target */,
+			);
 			path = Eventorias;
 			sourceTree = "<group>";
 		};
@@ -438,11 +451,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "4 en cours";
+				CURRENT_PROJECT_VERSION = "5 en cours";
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Eventorias/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need to access to your camera to add images to your event";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access to your photo library to add images to your event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -471,11 +487,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "4 en cours";
+				CURRENT_PROJECT_VERSION = "5 en cours";
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Eventorias/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need to access to your camera to add images to your event";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need to access to your photo library to add images to your event";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

@@ -1,5 +1,5 @@
 # Fichiers à ne pas sauvegarder.
-Ignore/
+ignore/
 #GoogleService-Info.plist
 #History.md
 

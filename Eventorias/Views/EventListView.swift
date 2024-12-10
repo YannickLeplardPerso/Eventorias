@@ -11,18 +11,14 @@ import SwiftUI
 
 struct EventListView: View {
     @StateObject private var viewModel = EventViewModel()
-    @State private var searchText = ""
     @State private var showingSortOptions = false
     @State private var selectedSortOption: SortOption = .date
-    
-    enum SortOption {
-        case date, category, title
-    }
+    @State private var selectedEvent: Event?
     
     var body: some View {
         ZStack {
             VStack {
-                SearchBarComponent(text: $searchText)
+                SearchBarComponent(text: $viewModel.searchText)
                     .padding(.horizontal)
                     .padding(.vertical, 4)
                 
@@ -36,10 +32,16 @@ struct EventListView: View {
                         Text("No events yet")
                             .foregroundColor(.evGray)
                     } else {
-                        ForEach(viewModel.events) { event in
-                            NavigationLink(destination: EventDetailView(event: event)) {
+                        ForEach(viewModel.filteredEvents) { event in
+                            Button {
+                                selectedEvent = event
+                            } label: {
                                 EventCardComponent(event: event)
+                                    .padding(.horizontal)
+                                    .padding(.vertical, 4)
                             }
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
                         }
                     }
                 }
@@ -69,16 +71,24 @@ struct EventListView: View {
         .onAppear {
             viewModel.fetchEvents()
         }
+        .navigationDestination(isPresented: Binding(get: { selectedEvent != nil },
+                                                    set: { if !$0 { selectedEvent = nil } })) {
+            if let event = selectedEvent {
+                EventDetailView(event: event)
+            }
+        }
         .actionSheet(isPresented: $showingSortOptions) {
             ActionSheet(
                 title: Text("Sort events"),
                 buttons: [
                     .default(Text("By date")) { selectedSortOption = .date },
                     .default(Text("By category")) { selectedSortOption = .category },
-                    .default(Text("By title")) { selectedSortOption = .title },
                     .cancel()
                 ]
             )
+        }
+        .onChange(of: selectedSortOption) { oldValue, newValue in
+            viewModel.sortEvents(by: newValue)
         }
     }
 }
