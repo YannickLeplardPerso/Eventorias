@@ -14,15 +14,8 @@ import FirebaseFirestore
 
 struct EventDetailView: View {
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: EventViewModel
     let event: Event
-    @State private var creatorPhotoURL: String?
-    @State private var cameraPosition: MapCameraPosition = .automatic
-    @State private var location: CLLocationCoordinate2D?
-    
-    struct MapItem: Identifiable {
-        let id = UUID()
-        let placemark: MKPlacemark
-    }
     
     var body: some View {
         ScrollView {
@@ -39,17 +32,14 @@ struct EventDetailView: View {
                                     .clipped()
                                     .cornerRadius(10)
                             case .failure(_):
-                                // Image de fallback en cas d'erreur
                                 fallbackImage
                             case .empty:
-                                // Pendant le chargement
-                                ProgressView()
+                                CustomProgressViewComponent()
                             @unknown default:
                                 fallbackImage
                             }
                         }
                     } else {
-                        // Si pas d'image
                         fallbackImage
                     }
                 }
@@ -80,7 +70,7 @@ struct EventDetailView: View {
                     
                     Spacer()
                     
-                    if let photoURL = creatorPhotoURL,
+                    if let photoURL = viewModel.creatorPhotoURL,
                        let url = URL(string: photoURL) {
                         AsyncImage(url: url) { phase in
                             switch phase {
@@ -113,8 +103,8 @@ struct EventDetailView: View {
                         .font(.system(size: 16))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Map(position: $cameraPosition) {
-                        if let location = location {
+                    Map(position: $viewModel.cameraPosition) {
+                        if let location = viewModel.eventLocation {
                             Annotation(event.title, coordinate: location) {
                                 Image(systemName: "mappin")
                                     .foregroundColor(.red)
@@ -144,9 +134,10 @@ struct EventDetailView: View {
             }
         }
         .onAppear {
-            loadCreatorInfo()
-            geocodeLocation()
+            viewModel.loadCreatorInfo(for: event.creatorId)
+            viewModel.geocodeLocation(address: event.location)
         }
+        .eventAlert(error: $viewModel.error)
     }
     
     private var fallbackImage: some View {
@@ -171,63 +162,28 @@ struct EventDetailView: View {
                     .font(.system(size: 60))
             )
     }
-    
-    private func loadCreatorInfo() {
-        let db = Firestore.firestore()
-        db.collection("users").document(event.creatorId).getDocument { document, error in
-            if let document = document, document.exists {
-                DispatchQueue.main.async {
-                    creatorPhotoURL = document.data()?["profileImageUrl"] as? String
-                }
-            }
-        }
-    }
-    
-    private func geocodeLocation() {
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(event.location) { placemarks, error in
-            if let placemark = placemarks?.first {
-                location = placemark.location?.coordinate
-                if let location = location {
-                    cameraPosition = .region(MKCoordinateRegion(
-                        center: location,
-                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                    ))
-                }
-            }
-        }
-    }
 }
-
-//var fallbackImage: some View {
-//    Rectangle()
-//        .fill(Color.evBackground)
-//        .frame(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.width - 40)
-//        .cornerRadius(10)
-//        .overlay(
-//            Image(systemName: "photo")
-//                .foregroundColor(.evGray)
-//                .font(.system(size: 40))
-//        )
-//}
 
 
 
 struct EventDetailView_Previews: PreviewProvider {
-   static var sampleEvent = Event(
-       title: "Concert Rock",
-       description: "Un super concert de rock avec les meilleurs groupes du moment. Venez nombreux pour une soirée inoubliable remplie de musique et d'énergie !",
-       date: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date(),
-       location: "Zénith de Paris, 211 Avenue Jean Jaurès, 75019 Paris",
-       category: .music,
-       creatorId: "user123",
-       createdAt: Date()
-   )
-   
-   static var previews: some View {
-       NavigationStack {
-           EventDetailView(event: sampleEvent)
-       }
-       .preferredColorScheme(.dark)
-   }
+    static var sampleEvent = Event(
+        title: "Concert Rock",
+        description: "Un super concert de rock avec les meilleurs groupes du moment. Venez nombreux pour une soirée inoubliable remplie de musique et d'énergie !",
+        date: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date(),
+        location: "Zénith de Paris, 211 Avenue Jean Jaurès, 75019 Paris",
+        category: .music,
+        creatorId: "user123",
+        createdAt: Date()
+    )
+    
+    static var previews: some View {
+        NavigationStack {
+            EventDetailView(
+                viewModel: EventViewModel(),
+                event: sampleEvent
+            )
+        }
+        .preferredColorScheme(.dark)
+    }
 }

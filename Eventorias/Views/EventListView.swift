@@ -74,7 +74,7 @@ struct EventListView: View {
         .navigationDestination(isPresented: Binding(get: { selectedEvent != nil },
                                                     set: { if !$0 { selectedEvent = nil } })) {
             if let event = selectedEvent {
-                EventDetailView(event: event)
+                EventDetailView(viewModel: viewModel, event: event)
             }
         }
         .actionSheet(isPresented: $showingSortOptions) {
@@ -90,6 +90,7 @@ struct EventListView: View {
         .onChange(of: selectedSortOption) { oldValue, newValue in
             viewModel.sortEvents(by: newValue)
         }
+        .eventAlert(error: $viewModel.error)
     }
 }
 

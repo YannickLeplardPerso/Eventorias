@@ -20,7 +20,7 @@ class ProfileViewModel: ObservableObject {
     @Published var selectedImage: UIImage?
     @Published var profileImageUrl: String?
     @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
+    @Published var error: EventError?
     
     private let storage = Storage.storage()
     
@@ -37,14 +37,18 @@ class ProfileViewModel: ObservableObject {
     }
     
     func updateUserProfile() {
-        guard let user = Auth.auth().currentUser else { return }
+        guard let user = Auth.auth().currentUser else {
+            error = .unauthorizedAccess
+            return
+        }
+        
         let changeRequest = user.createProfileChangeRequest()
         changeRequest.displayName = userName
         
-        changeRequest.commitChanges { [weak self] error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self?.errorMessage = error.localizedDescription
+        changeRequest.commitChanges { error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.error = .unknownError("updateUserProfile: \(error.localizedDescription)")
                 }
             }
         }
@@ -52,30 +56,33 @@ class ProfileViewModel: ObservableObject {
     
     func uploadProfileImage(_ image: UIImage) {
         guard let userId = Auth.auth().currentUser?.uid,
-              let imageData = image.jpegData(compressionQuality: 0.5) else { return }
+              let imageData = image.jpegData(compressionQuality: 0.5) else {
+            error = .imageProcessingFailed
+            return
+        }
         
         isLoading = true
         let storageRef = storage.reference().child("profile_images/\(userId).jpg")
         
-        storageRef.putData(imageData, metadata: nil) { [weak self] metadata, error in
+        storageRef.putData(imageData, metadata: nil) { metadata, error in
             if let error = error {
                 DispatchQueue.main.async {
-                    self?.isLoading = false
-                    self?.errorMessage = error.localizedDescription
+                    self.isLoading = false
+                    self.error = .unknownError("uploadProfileImage: \(error.localizedDescription)")
                 }
                 return
             }
             
-            storageRef.downloadURL { [weak self] url, error in
+            storageRef.downloadURL { url, error in
                 DispatchQueue.main.async {
-                    self?.isLoading = false
+                    self.isLoading = false
                     if let error = error {
-                        self?.errorMessage = error.localizedDescription
+                        self.error = .unknownError("uploadProfileImage failed: \(error.localizedDescription)")
                         return
                     }
                     
                     if let url = url {
-                        self?.updateProfileImage(url)
+                        self.updateProfileImage(url)
                     }
                 }
             }
@@ -83,24 +90,31 @@ class ProfileViewModel: ObservableObject {
     }
     
     private func updateProfileImage(_ url: URL) {
-        let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
-        changeRequest?.photoURL = url
-        changeRequest?.commitChanges { [weak self] error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self?.errorMessage = error.localizedDescription
+        guard let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() else {
+            error = .unauthorizedAccess
+            return
+        }
+
+        changeRequest.photoURL = url
+        changeRequest.commitChanges { [weak self] error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.error = .unknownError("updateProfileImage failed: \(error.localizedDescription)")
+                    return
                 }
-                return
-            }
-            
-            if let userId = Auth.auth().currentUser?.uid {
+                
+                guard let userId = Auth.auth().currentUser?.uid else {
+                    self?.error = .unauthorizedAccess
+                    return
+                }
+                
                 let db = Firestore.firestore()
                 db.collection("users").document(userId).setData([
                     "profileImageUrl": url.absoluteString
                 ], merge: true) { error in
                     DispatchQueue.main.async {
                         if let error = error {
-                            self?.errorMessage = error.localizedDescription
+                            self?.error = .unknownError("updateProfileImage failed: \(error.localizedDescription)")
                         } else {
                             self?.profileImageUrl = url.absoluteString
                         }

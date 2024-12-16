@@ -57,7 +57,7 @@ struct EventCardComponent: View {
                         .resizable()
                         .scaledToFill()
                 } placeholder: {
-                    ProgressView()
+                    CustomProgressViewComponent()
                 }
                 .frame(width: 136, height: 80)
                 .clipShape(RoundedRectangle(cornerRadius: 10))

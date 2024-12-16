@@ -48,7 +48,7 @@ struct LoginSheetView: View {
                 .padding(.horizontal)
                 
                 if viewModel.isLoading {
-                    ProgressView()
+                    CustomProgressViewComponent()
                 } else {
                     Button(action: {
                         if isSignUp {
@@ -87,11 +87,7 @@ struct LoginSheetView: View {
                 isPresented = false
             })
         }
-        .alert("Error", isPresented: $viewModel.showError) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text(viewModel.errorMessage)
-        }
+        .eventAlert(error: $viewModel.error)
     }
 }
 

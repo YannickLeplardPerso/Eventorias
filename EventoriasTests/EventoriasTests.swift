@@ -2,11 +2,10 @@
 //  EventoriasTests.swift
 //  EventoriasTests
 //
-//  Created by Yannick LEPLARD on 10/11/2024.
+//  Created by Yannick LEPLARD on 16/12/2024.
 //
 
 import Testing
-@testable import Eventorias
 
 struct EventoriasTests {
 

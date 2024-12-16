@@ -5,9 +5,12 @@
 -   ok prise de photo
 -   ok filtrage les événements par catégorie et date
 -   ok recherche
-- gestion des erreurs
+-   ok gestion des erreurs
 - accessibilité
 - tests
+
++   NON modif style progressview (circular) 
+
 
 Un système de gestion des invités sera également intégré pour faciliter le suivi des participations
 

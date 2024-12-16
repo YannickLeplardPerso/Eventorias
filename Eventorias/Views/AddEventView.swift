@@ -93,10 +93,8 @@ struct AddEventView: View {
                     dismiss()
                 }
             }) {
-                if viewModel.isUploading {
-                    ProgressView()
-                        .progressViewStyle(
-                            CircularProgressViewStyle(tint: .evMain))
+                if viewModel.isLoading {
+                    CustomProgressViewComponent()
                 } else {
                     Text("Validate")
                         .foregroundColor(.evMain)
@@ -107,7 +105,7 @@ struct AddEventView: View {
                         .cornerRadius(10)
                 }
             }
-            .disabled(!viewModel.isFormValid || viewModel.isUploading)
+            .disabled(!viewModel.isFormValid || viewModel.isLoading)
             .padding(.horizontal)
             .padding(.bottom, 20)
         }
@@ -125,6 +123,7 @@ struct AddEventView: View {
             }
 
         }
+        .eventAlert(error: $viewModel.error)
     }
 }
 

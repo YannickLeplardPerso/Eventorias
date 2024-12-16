@@ -110,20 +110,10 @@ struct ProfileView: View {
         }
         .overlay {
             if viewModel.isLoading {
-                ProgressView()
-                    .scaleEffect(1.5)
-                    .background(Color.black.opacity(0.4))
+                CustomProgressViewComponent()
             }
         }
-        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
-            Button("OK") {
-                viewModel.errorMessage = nil
-            }
-        } message: {
-            if let error = viewModel.errorMessage {
-                Text(error)
-            }
-        }
+        .eventAlert(error: $viewModel.error)
     }
 }
 
