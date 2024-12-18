@@ -58,41 +58,6 @@
             default = "YES">
          </TestPlanReference>
       </TestPlans>
-      <Testables>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A7BB3F12D1089B8005CFC39"
-               BuildableName = "EventoriasTests.xctest"
-               BlueprintName = "EventoriasTests"
-               ReferencedContainer = "container:Eventorias.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A1B701D2CE10D7100089D4F"
-               BuildableName = "EventoriasUITests.xctest"
-               BlueprintName = "EventoriasUITests"
-               ReferencedContainer = "container:Eventorias.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A7BB3F12D1089B8005CFC39"
-               BuildableName = "EventoriasTests.xctest"
-               BlueprintName = "EventoriasTests"
-               ReferencedContainer = "container:Eventorias.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

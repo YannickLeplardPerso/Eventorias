@@ -68,7 +68,8 @@ class AuthViewModel: ObservableObject {
             }
         }
     }
-    
+}
+
 //    func signOut() {
 //        do {
 //            try Auth.auth().signOut()
@@ -78,4 +79,3 @@ class AuthViewModel: ObservableObject {
 //            showError = true
 //        }
 //    }
-}

@@ -10,6 +10,14 @@
 - tests
 
 +   NON modif style progressview (circular) 
++   OUI modif alerte (circle aved point d'exclamation, floutage et assombrissement du fond...)
+
+
+
+
+Assurer la réactivité de la recherche en filtrant les événements en temps réel, via les méthodes fournit par Firebase directement (ex : ne pas récupérer tous les événements et filtrer ensuite dans votre code).
+
+
 
 
 Un système de gestion des invités sera également intégré pour faciliter le suivi des participations
