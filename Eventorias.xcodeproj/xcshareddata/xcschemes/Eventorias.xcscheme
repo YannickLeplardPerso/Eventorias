@@ -31,20 +31,6 @@
                reference = "container:Eventorias.xctestplan">
             </TestPlanReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2A7BB3F12D1089B8005CFC39"
-               BuildableName = "EventoriasTests.xctest"
-               BlueprintName = "EventoriasTests"
-               ReferencedContainer = "container:Eventorias.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -54,7 +40,10 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Eventorias.xctestplan"
+            reference = "container:Eventorias.xctestplan">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:EventoriasTestPlan.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

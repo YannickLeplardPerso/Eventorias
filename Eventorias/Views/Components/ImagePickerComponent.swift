@@ -17,6 +17,8 @@ struct ImagePickerComponent: UIViewControllerRepresentable {
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .camera
         imagePicker.delegate = context.coordinator
+        imagePicker.accessibilityLabel = "Camera"
+        imagePicker.accessibilityHint = "Take a photo for your event"
         return imagePicker
     }
 

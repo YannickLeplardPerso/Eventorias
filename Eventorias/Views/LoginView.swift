@@ -22,6 +22,7 @@ struct LoginView: View {
                 .frame(height: UIScreen.main.bounds.height / 3)
                 .padding(.top, 120)
                 .padding(.horizontal, 74)
+                .accessibilityLabel("Eventorias Logo")
             
             Button(action: {
                 showLoginSheet = true
@@ -30,6 +31,7 @@ struct LoginView: View {
                     Image(systemName: "envelope.fill")
                         .foregroundColor(.evMain)
                         .font(.system(size: 16))
+                        .accessibilityHidden(true)
                     
                     Text("Sign in with email")
                         .foregroundColor(.evMain)
@@ -41,6 +43,8 @@ struct LoginView: View {
                 .cornerRadius(8)
                 .padding(.horizontal, 74)
             }
+            .accessibilityIdentifier("email-signin-button")
+            .accessibilityHint("Opens sign in form")
             
             Spacer()
         }

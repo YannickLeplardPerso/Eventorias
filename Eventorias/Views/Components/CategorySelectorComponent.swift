@@ -32,6 +32,9 @@ struct CategorySelectorComponent: View {
                                         .fill(selectedCategory == category ? .evRed : .evBackground)
                                 )
                         }
+                        .accessibilityLabel("Category: \(category.rawValue)")
+                        .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
+                        .accessibilityHint("Double tap to select this category")
                         .frame(maxWidth: .infinity)
                     }
                     Spacer(minLength: 0)
@@ -40,18 +43,19 @@ struct CategorySelectorComponent: View {
                 .padding(.top, 24)
                 .padding(.bottom, 8)
             }
-//            .frame(maxWidth: .infinity)
             .background(
                 Text(title)
                     .font(.system(size: 12))
                     .foregroundColor(.evGraybis)
                     .padding(.leading, 12)
-                    .padding(.top, 8),
+                    .padding(.top, 8)
+                    .accessibilityHidden(true),
                 alignment: .topLeading
             )
         }
         .background(.evBackground)
         .cornerRadius(6)
+        .accessibilityElement(children: .contain)
     }
 }
 

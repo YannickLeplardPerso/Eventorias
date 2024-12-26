@@ -10,15 +10,29 @@ import SwiftUI
 
 
 struct SortButtonComponent: View {
-    var action: () -> Void
+    @State private var showingSortMenu = false
+    @Binding var selectedSort: SortOption
+    var onSortSelected: (SortOption) -> Void
+    
+    var sortLabel: String {
+        switch selectedSort {
+        case .date(let ascending):
+            return "Date: " + (ascending ? "↑" : "↓")
+        case .category(let category):
+            return "Catégorie: " + (category?.rawValue ?? "Toutes")
+        }
+    }
     
     var body: some View {
-        Button(action: action) {
+        Button {
+            showingSortMenu = true
+        } label: {
             HStack {
                 Image(systemName: "arrow.up.arrow.down")
                     .font(.system(size: 16))
                     .foregroundColor(.evMain)
-                Text("Sorting")
+                    .accessibilityHidden(true)
+                Text(sortLabel)
                     .font(.system(size: 16))
                     .foregroundColor(.evMain)
             }
@@ -27,17 +41,55 @@ struct SortButtonComponent: View {
             .background(.evBackground)
             .cornerRadius(20)
         }
+        .accessibilityLabel("Sort events")
+        .accessibilityValue(sortLabel)
+        .accessibilityHint("Opens sorting options")
         .frame(maxWidth: .infinity, alignment: .leading)
+        .sheet(isPresented: $showingSortMenu) {
+            SortMenuComponent(selectedSort: $selectedSort, onSortSelected: onSortSelected)
+        }
     }
 }
 
 
+//struct SortButtonComponent_Previews: PreviewProvider {
+//    static var previews: some View {
+//        struct PreviewWrapper: View {
+//            @State private var selectedSort: SortOption = .date(ascending: true)
+//            
+//            var body: some View {
+//                VStack {
+//                    SortButtonComponent(
+//                        selectedSort: $selectedSort,
+//                        onSortSelected: { newSort in
+//                            selectedSort = newSort
+//                        }
+//                    )
+//                }
+//                .padding()
+//            }
+//        }
+//        
+//        return PreviewWrapper()
+//    }
+//}
 
-struct SortButtonComponent_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            SortButtonComponent(action: {})
+#Preview("Sort Button") {
+    struct PreviewWrapper: View {
+        @State private var selectedSort: SortOption = .date(ascending: true)
+        
+        var body: some View {
+            VStack {
+                SortButtonComponent(
+                    selectedSort: $selectedSort,
+                    onSortSelected: { newSort in
+                        selectedSort = newSort
+                    }
+                )
+            }
+            .padding()
         }
-        .padding()
     }
+    
+    return PreviewWrapper()
 }

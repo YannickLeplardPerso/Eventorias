@@ -31,6 +31,7 @@ struct EventDetailView: View {
                                     .frame(width: UIScreen.main.bounds.width - 40, height: UIScreen.main.bounds.width - 40)
                                     .clipped()
                                     .cornerRadius(10)
+                                    .accessibilityLabel("Event image")
                             case .failure(_):
                                 fallbackImage
                             case .empty:
@@ -51,21 +52,27 @@ struct EventDetailView: View {
                             Image(systemName: "calendar")
                                 .foregroundColor(.evMain)
                                 .font(.system(size: 16))
+                                .accessibilityHidden(true)
                             
                             Text(event.formattedDate)
                                 .foregroundColor(.evMain)
                                 .font(.system(size: 16))
                         }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Date: \(event.formattedDate)")
                         
                         HStack(spacing: 8) {
                             Image(systemName: "clock")
                                 .foregroundColor(.evMain)
                                 .font(.system(size: 16))
+                                .accessibilityHidden(true)
                             
                             Text(event.formattedTime)
                                 .foregroundColor(.evMain)
                                 .font(.system(size: 16))
                         }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Time: \(event.formattedTime)")
                     }
                     
                     Spacer()
@@ -86,8 +93,10 @@ struct EventDetailView: View {
                                 fallbackProfileImage
                             }
                         }
+                        .accessibilityHidden(true)
                     } else {
                         fallbackProfileImage
+                            .accessibilityHidden(true)
                     }
                 }
                 .padding(.horizontal)
@@ -96,25 +105,34 @@ struct EventDetailView: View {
                     .foregroundColor(.evMain)
                     .font(.system(size: 14))
                     .padding(.horizontal)
+                    .accessibilityLabel("Event description: \(event.description)")
                 
                 HStack(spacing: 24) {
-                    Text(event.location)
+                    Text(event.location.address)
                         .foregroundColor(.evMain)
                         .font(.system(size: 16))
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .accessibilityLabel("Location: \(event.location.address)")
                     
-                    Map(position: $viewModel.cameraPosition) {
-                        if let location = viewModel.eventLocation {
-                            Annotation(event.title, coordinate: location) {
-                                Image(systemName: "mappin")
-                                    .foregroundColor(.red)
-                                    .font(.system(size: 16))
-                            }
+                    Map(position: .constant(viewModel.updateCameraPosition(for: event))) {
+                        if let latitude = event.location.latitude,
+                           let longitude = event.location.longitude {
+                            Annotation(event.title,
+                                       coordinate: CLLocationCoordinate2D(
+                                        latitude: latitude,
+                                        longitude: longitude
+                                       )) {
+                                           Image(systemName: "mappin")
+                                               .foregroundColor(.red)
+                                               .font(.system(size: 16))
+                                               .accessibilityHidden(true)
+                                       }
                         }
                     }
                     .mapStyle(.standard)
                     .frame(width: 150, height: 72)
                     .cornerRadius(10)
+                    .accessibilityLabel("Map showing event location")
                 }
                 .padding(.horizontal)
             }
@@ -127,15 +145,17 @@ struct EventDetailView: View {
                     Image(systemName: "arrow.backward")
                         .foregroundColor(.evMain)
                 }
+                .accessibilityLabel("Back")
             }
             ToolbarItem(placement: .principal) {
                 Text(event.title)
                     .foregroundColor(.evMain)
+                    .accessibilityAddTraits(.isHeader)
             }
         }
         .onAppear {
             viewModel.loadCreatorInfo(for: event.creatorId)
-            viewModel.geocodeLocation(address: event.location)
+//            viewModel.initializeCameraPosition(for: event)
         }
         .eventAlert(error: $viewModel.error)
     }
@@ -171,7 +191,11 @@ struct EventDetailView_Previews: PreviewProvider {
         title: "Concert Rock",
         description: "Un super concert de rock avec les meilleurs groupes du moment. Venez nombreux pour une soirée inoubliable remplie de musique et d'énergie !",
         date: Calendar.current.date(byAdding: .day, value: 2, to: Date()) ?? Date(),
-        location: "Zénith de Paris, 211 Avenue Jean Jaurès, 75019 Paris",
+        location: EventLocation(
+            address: "Zénith de Paris, 211 Avenue Jean Jaurès, 75019 Paris",
+            latitude: 48.8932,    // Coordonnées réelles du Zénith
+            longitude: 2.3934
+        ),
         category: .music,
         creatorId: "user123",
         createdAt: Date()

@@ -26,6 +26,7 @@ struct EventCardComponent: View {
                             .scaledToFill()
                             .frame(width: 40, height: 40)
                             .clipShape(Circle())
+                            .accessibilityHidden(true)
                     case .failure, .empty:
                         fallbackProfileImage
                     @unknown default:
@@ -36,6 +37,7 @@ struct EventCardComponent: View {
             } else {
                 fallbackProfileImage
                     .padding()
+                    .accessibilityHidden(true)
             }
             VStack(alignment: .leading) {
                 Text(event.title)
@@ -48,6 +50,9 @@ struct EventCardComponent: View {
                     .foregroundColor(.evGray)
                     .padding(.top, 3)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Event: \(event.title), Date: \(event.formattedDate)")
+            
             
             Spacer()
             
@@ -62,6 +67,7 @@ struct EventCardComponent: View {
                 .frame(width: 136, height: 80)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .padding(.leading)
+                .accessibilityLabel("Event image")
             } else {
                 Rectangle()
                     .fill(Color.evRed)
@@ -73,6 +79,7 @@ struct EventCardComponent: View {
                             .font(.system(size: 40))
                     )
                     .padding(.leading)
+                    .accessibilityHidden(true)
             }
         }
         .onAppear {
@@ -80,6 +87,8 @@ struct EventCardComponent: View {
         }
         .background(.evBackground)
         .cornerRadius(8)
+        .accessibilityElement(children: .contain)
+        .accessibilityAddTraits(.isButton)
     }
     
     private func loadCreatorInfo() {
@@ -114,7 +123,11 @@ struct EventCardComponent_Previews: PreviewProvider {
             title: "Conférence SwiftUI",
             description: "Une session interactive pour apprendre SwiftUI avec des experts.",
             date: Date(),
-            location: "Paris, France",
+            location: EventLocation(
+                address: "Palais des Congrès, 2 Place de la Porte Maillot, 75017 Paris",
+                latitude: 48.8785,
+                longitude: 2.2833
+            ),
             category: .business,
             creatorId: "123",
             createdAt: Date()

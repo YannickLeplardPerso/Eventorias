@@ -15,15 +15,25 @@ class AuthViewModel: ObservableObject {
     @Published var error: EventError?
     @Published var isLoading = false
     
+//    private let auth: Auth
+//    init(auth: Auth = Auth.auth()) {
+//        self.auth = auth
+//    }
+    private let auth = Auth.auth()
+    
     func signIn(email: String, password: String, completion: @escaping () -> Void) {
         guard !email.isEmpty else {
             error = .invalidEmail
             return
         }
+        guard !password.isEmpty else {
+            error = .invalidPassword
+            return
+        }
         
         isLoading = true
         
-        Auth.auth().signIn(withEmail: email, password: password) { result, error in
+        auth.signIn(withEmail: email, password: password) { result, error in
             DispatchQueue.main.async {
                 self.isLoading = false
                 if let error = error {
@@ -41,13 +51,21 @@ class AuthViewModel: ObservableObject {
             error = .nameRequired
             return
         }
+        guard !email.isEmpty else {
+            error = .invalidEmail
+            return
+        }
+        guard !password.isEmpty else {
+            error = .invalidPassword
+            return
+        }
         
         isLoading = true
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+        auth.createUser(withEmail: email, password: password) { result, error in
             DispatchQueue.main.async {
                 if let error = error {
                     self.isLoading = false
-                    self.error = .unknownError("signUpFirebase failed : \(error.localizedDescription)")
+                    self.error = .unknownError("signUp failed : \(error.localizedDescription)")
                     return
                 }
                 
@@ -69,13 +87,3 @@ class AuthViewModel: ObservableObject {
         }
     }
 }
-
-//    func signOut() {
-//        do {
-//            try Auth.auth().signOut()
-//            isAuthenticated = false
-//        } catch {
-//            errorMessage = error.localizedDescription
-//            showError = true
-//        }
-//    }

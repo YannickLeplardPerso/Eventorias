@@ -16,11 +16,13 @@ struct EventAlertModifier: ViewModifier {
         ZStack {
             content
                 .blur(radius: error.wrappedValue != nil ? 3 : 0)
+                .accessibilityHidden(error.wrappedValue != nil)
             
             if let error = error.wrappedValue {
                 // pour atténuer la vue en fond
                 Color.black.opacity(0.5)
                     .ignoresSafeArea()
+                    .accessibilityHidden(true)
                 
                 VStack(spacing: 12) {
                     Circle()
@@ -32,12 +34,14 @@ struct EventAlertModifier: ViewModifier {
                                 .font(.system(size: 20))
                         )
                         .padding(.bottom, 20)
+                        .accessibilityHidden(true)
                     
                     Text(error.localizedDescription)
                         .foregroundColor(.evMain)
                         .multilineTextAlignment(.center)
                         .font(.system(size: 14))
                         .padding(.bottom, 20)
+                        .accessibilityLabel("Error: \(error.localizedDescription)")
                     
                     Button {
                         self.error.wrappedValue = nil
@@ -49,28 +53,19 @@ struct EventAlertModifier: ViewModifier {
                             .background(.evRed)
                             .cornerRadius(8)
                     }
+                    .accessibilityLabel("Dismiss error")
+                    .accessibilityHint("Closes the error message")
                 }
                 .padding(20)
                 .background(.background)
                 .cornerRadius(12)
                 .frame(maxWidth: 250)
+                .accessibilityElement(children: .contain)
+                .accessibilityAddTraits(.isModal)
             }
         }
     }
 }
-//struct EventAlertModifier: ViewModifier {
-//    let error: Binding<EventError?>
-//    
-//    func body(content: Content) -> some View {
-//        content.alert(item: error) { error in
-//            Alert(
-//                title: Text("Error"),
-//                message: Text(error.localizedDescription),
-//                dismissButton: .default(Text("OK"))
-//            )
-//        }
-//    }
-//}
 
 extension View {
     func eventAlert(error: Binding<EventError?>) -> some View {

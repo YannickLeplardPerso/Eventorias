@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "275C309A-5F15-40BB-B1DC-AAB3F1F96F3B",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random",
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Eventorias.xcodeproj",
+        "identifier" : "2A7BB3F12D1089B8005CFC39",
+        "name" : "EventoriasTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -12,7 +12,6 @@ import SwiftUI
 struct EventListView: View {
     @StateObject private var viewModel = EventViewModel()
     @State private var showingSortOptions = false
-    @State private var selectedSortOption: SortOption = .date
     @State private var selectedEvent: Event?
     
     var body: some View {
@@ -21,16 +20,22 @@ struct EventListView: View {
                 SearchBarComponent(text: $viewModel.searchText)
                     .padding(.horizontal)
                     .padding(.vertical, 4)
+                    .accessibilityIdentifier("search-bar")
                 
-                SortButtonComponent(action: {
-                    showingSortOptions = true
-                })
+                SortButtonComponent(
+                    selectedSort: $viewModel.currentSort,
+                    onSortSelected: { option in
+                        viewModel.applySort(option)
+                    }
+                )
                 .padding(.horizontal)
+                .accessibilityIdentifier("sort-button")
                 
                 List {
                     if viewModel.events.isEmpty {
                         Text("No events yet")
                             .foregroundColor(.evGray)
+                            .accessibilityLabel("No events available")
                     } else {
                         ForEach(viewModel.filteredEvents) { event in
                             Button {
@@ -40,12 +45,16 @@ struct EventListView: View {
                                     .padding(.horizontal)
                                     .padding(.vertical, 4)
                             }
+                            .accessibilityLabel("Event: \(event.title)")
+                            .accessibilityHint("Double tap to view event details")
+                            .accessibilityIdentifier("event-card-\(event.id ?? UUID().uuidString)")
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
                         }
                     }
                 }
                 .listStyle(PlainListStyle())
+                .accessibilityIdentifier("events-list")
             }
             
             // Bouton flottant
@@ -63,32 +72,34 @@ struct EventListView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                             .shadow(radius: 4)
                     }
+                    .accessibilityLabel("Add new event")
+                    .accessibilityHint("Opens form to create new event")
+                    .accessibilityIdentifier("add-event-button")
                     .padding(.trailing, 20)
-                    .padding(.bottom, 70) // Pour être au-dessus de la TabView
+                    .padding(.bottom, 70)
                 }
             }
         }
         .onAppear {
             viewModel.fetchEvents()
         }
+        
+//        .onAppear {
+//            if Auth.auth().currentUser != nil {
+//                viewModel.fetchEvents()
+//            }
+//        }
+//        .onChange(of: Auth.auth().currentUser) { _, newUser in
+//            if newUser != nil {
+//                viewModel.fetchEvents()
+//            }
+//        }
+        
         .navigationDestination(isPresented: Binding(get: { selectedEvent != nil },
-                                                    set: { if !$0 { selectedEvent = nil } })) {
+                                                  set: { if !$0 { selectedEvent = nil } })) {
             if let event = selectedEvent {
                 EventDetailView(viewModel: viewModel, event: event)
             }
-        }
-        .actionSheet(isPresented: $showingSortOptions) {
-            ActionSheet(
-                title: Text("Sort events"),
-                buttons: [
-                    .default(Text("By date")) { selectedSortOption = .date },
-                    .default(Text("By category")) { selectedSortOption = .category },
-                    .cancel()
-                ]
-            )
-        }
-        .onChange(of: selectedSortOption) { oldValue, newValue in
-            viewModel.sortEvents(by: newValue)
         }
         .eventAlert(error: $viewModel.error)
     }

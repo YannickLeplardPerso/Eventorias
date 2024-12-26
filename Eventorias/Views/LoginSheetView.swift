@@ -28,6 +28,7 @@ struct LoginSheetView: View {
                         text: $name
                     )
                     .padding(.horizontal)
+                    .accessibilityIdentifier("name-input")
                 }
                 
                 CustomTextFieldComponent(
@@ -38,6 +39,7 @@ struct LoginSheetView: View {
                 .padding(.horizontal)
                 .textInputAutocapitalization(.never)
                 .keyboardType(.emailAddress)
+                .accessibilityIdentifier("email-input")
                 
                 CustomTextFieldComponent(
                     title: "Password",
@@ -46,6 +48,7 @@ struct LoginSheetView: View {
                     isSecure: true
                 )
                 .padding(.horizontal)
+                .accessibilityIdentifier("password-input")
                 
                 if viewModel.isLoading {
                     CustomProgressViewComponent()
@@ -66,9 +69,14 @@ struct LoginSheetView: View {
                             .font(.system(size: 16))
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(.evRed)
+                            .background(email.isEmpty || password.isEmpty || (isSignUp && name.isEmpty) ? .gray.opacity(0.3) : .evRed)
+                                    .cornerRadius(8)
+//                            .background(.evRed)
                             .cornerRadius(8)
                     }
+                    .accessibilityIdentifier("submit-button")
+                    .accessibilityLabel(isSignUp ? "Sign up button" : "Sign in button")
+                    .disabled(email.isEmpty || password.isEmpty || (isSignUp && name.isEmpty))
                     .padding(.horizontal)
                     
                     Button(action: {
@@ -77,6 +85,8 @@ struct LoginSheetView: View {
                         Text(isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up")
                             .foregroundColor(.blue)
                     }
+                    .accessibilityIdentifier("toggle-mode-button")
+                    .accessibilityLabel(isSignUp ? "Switch to sign in" : "Switch to sign up")
                 }
                 
                 Spacer()
@@ -85,7 +95,9 @@ struct LoginSheetView: View {
             .navigationTitle(isSignUp ? "Sign Up" : "Sign In")
             .navigationBarItems(trailing: Button("Cancel") {
                 isPresented = false
-            })
+            }
+                .accessibilityIdentifier("cancel-button")
+                .accessibilityLabel("Cancel authentication"))
         }
         .eventAlert(error: $viewModel.error)
     }

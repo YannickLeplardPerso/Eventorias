@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct CustomDatePickerComponent: View {
     let title: String
     @Binding var date: Date
@@ -20,12 +22,14 @@ struct CustomDatePickerComponent: View {
                 .padding(.top, 28)
                 .padding(.bottom, 8)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityLabel(title)
                 .background(
                     Text(title)
                         .font(.system(size: 12))
                         .foregroundColor(.evGraybis)
                         .padding(.leading, 12)
-                        .padding(.top, 8),
+                        .padding(.top, 8)
+                        .accessibilityHidden(true),
                     alignment: .topLeading
                 )
         }

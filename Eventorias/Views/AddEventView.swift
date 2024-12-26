@@ -23,13 +23,17 @@ struct AddEventView: View {
                     CustomTextFieldComponent(
                         title: "Title",
                         placeholder: "New event",
-                        text: $viewModel.newEvent.title)
+                        text: $viewModel.newEvent.title
+                    )
+                    .accessibilityIdentifier("event-title-input")
 
                     CustomTextFieldComponent(
                         title: "Description",
                         placeholder: "Tap here to enter your description",
                         text: $viewModel.newEvent.description,
-                        isMultiline: true)
+                        isMultiline: true
+                    )
+                    .accessibilityIdentifier("event-description-input")
 
                     HStack(spacing: 18) {
                         CustomDatePickerComponent(
@@ -37,23 +41,28 @@ struct AddEventView: View {
                             date: $viewModel.newEvent.date,
                             components: .date
                         )
+                        .accessibilityIdentifier("event-date-picker")
 
                         CustomDatePickerComponent(
                             title: "Time",
                             date: $viewModel.newEvent.date,
                             components: .hourAndMinute
                         )
+                        .accessibilityIdentifier("event-time-picker")
                     }
 
                     CustomTextFieldComponent(
                         title: "Address",
                         placeholder: "Enter full address",
-                        text: $viewModel.newEvent.location)
+                        text: $viewModel.newEvent.location.address
+                    )
+                    .accessibilityIdentifier("event-address-input")
 
                     CategorySelectorComponent(
                         selectedCategory: $viewModel.newEvent.category,
                         title: "Category"
                     )
+                    .accessibilityIdentifier("category-selector")
                     
                     HStack(spacing: 15) {
                         Spacer()
@@ -68,6 +77,9 @@ struct AddEventView: View {
                                 .background(.evMain)
                                 .cornerRadius(10)
                         }
+                        .accessibilityLabel("Take photo")
+                        .accessibilityHint("Opens camera to take event photo")
+                        .accessibilityIdentifier("camera-button")
                         .sheet(isPresented: $showCamera) {
                             ImagePickerComponent(selectedImage: $viewModel.selectedImage)
                         }
@@ -81,6 +93,10 @@ struct AddEventView: View {
                                 .background(.evRed)
                                 .cornerRadius(10)
                         }
+                        // ???
+                                     .accessibilityLabel("Choose photo")
+                                     .accessibilityHint("Opens photo library to choose event image")
+                                     .accessibilityIdentifier("photo-picker-button")
                         
                         Spacer()
                     }
@@ -105,7 +121,10 @@ struct AddEventView: View {
                         .cornerRadius(10)
                 }
             }
-            .disabled(!viewModel.isFormValid || viewModel.isLoading)
+            .accessibilityLabel("Create event")
+            .accessibilityHint(viewModel.isFormValid ? "Double tap to create event" : "Form is incomplete")
+            .accessibilityIdentifier("create-event-button")
+//            .disabled(!viewModel.isFormValid || viewModel.isLoading)
             .padding(.horizontal)
             .padding(.bottom, 20)
         }
@@ -120,6 +139,7 @@ struct AddEventView: View {
                         .foregroundColor(.evMain)
                         .font(.headline)
                 }
+                .accessibilityLabel("Back to events")
             }
 
         }

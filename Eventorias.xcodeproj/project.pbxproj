@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A232DDF2D17530200601581 /* EventoriasTestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 2A232DDD2D1752E900601581 /* EventoriasTestPlan.xctestplan */; };
 		2A7781162D0040F80042B1B5 /* EventoriasApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7781112D0040F80042B1B5 /* EventoriasApp.swift */; };
 		2A77812A2D0055F60042B1B5 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2A7781292D0055F60042B1B5 /* FirebaseFirestore */; };
 		2A892EA02CE4E41800BF0B45 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2A892E9F2CE4E41800BF0B45 /* FirebaseAuth */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		2A1B70042CE10D7000089D4F /* Eventorias.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Eventorias.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2A232DDD2D1752E900601581 /* EventoriasTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EventoriasTestPlan.xctestplan; sourceTree = "<group>"; };
 		2A7781112D0040F80042B1B5 /* EventoriasApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventoriasApp.swift; sourceTree = "<group>"; };
 		2A7BB3F22D1089B8005CFC39 /* EventoriasTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EventoriasTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2A892EA32CE4E48B00BF0B45 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -34,19 +36,45 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2A232DE32D17541400601581 /* Exceptions for "Tests" folder in "EventoriasTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AuthViewModelTests.swift,
+				EventViewModelTests.swift,
+				MockFirebase.swift,
+				ProfleViewModel.swift,
+			);
+			target = 2A7BB3F12D1089B8005CFC39 /* EventoriasTests */;
+		};
+		2A3A5D3F2D1DB30300045105 /* Exceptions for "UITests" folder in "EventoriasTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ProfileViewUITests.swift,
+			);
+			target = 2A7BB3F12D1089B8005CFC39 /* EventoriasTests */;
+		};
+		2A3A5D402D1DB30A00045105 /* Exceptions for "UITests" folder in "Eventorias" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ProfileViewUITests.swift,
+			);
+			target = 2A1B70032CE10D7000089D4F /* Eventorias */;
+		};
+		2A729BB82D174D0E00FB18F2 /* Exceptions for "Tests" folder in "Eventorias" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AuthViewModelTests.swift,
+				EventViewModelTests.swift,
+				ProfleViewModel.swift,
+			);
+			target = 2A1B70032CE10D7000089D4F /* Eventorias */;
+		};
 		2A8B79B02D08794F00FCBD0C /* Exceptions for "Eventorias" folder in "Eventorias" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
 			target = 2A1B70032CE10D7000089D4F /* Eventorias */;
-		};
-		2A980F722D11ECA900799179 /* Exceptions for "EventoriasTests" folder in "EventoriasTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				AuthViewModelTests.swift,
-			);
-			target = 2A7BB3F12D1089B8005CFC39 /* EventoriasTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -59,12 +87,22 @@
 			path = Eventorias;
 			sourceTree = "<group>";
 		};
-		2AEB79512D10BEFB00517464 /* EventoriasTests */ = {
+		2A3A5D392D1DB2C100045105 /* UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				2A980F722D11ECA900799179 /* Exceptions for "EventoriasTests" folder in "EventoriasTests" target */,
+				2A3A5D402D1DB30A00045105 /* Exceptions for "UITests" folder in "Eventorias" target */,
+				2A3A5D3F2D1DB30300045105 /* Exceptions for "UITests" folder in "EventoriasTests" target */,
 			);
-			path = EventoriasTests;
+			path = UITests;
+			sourceTree = "<group>";
+		};
+		2AEB79512D10BEFB00517464 /* Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2A729BB82D174D0E00FB18F2 /* Exceptions for "Tests" folder in "Eventorias" target */,
+				2A232DE32D17541400601581 /* Exceptions for "Tests" folder in "EventoriasTests" target */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -94,10 +132,12 @@
 		2A1B6FFB2CE10D7000089D4F = {
 			isa = PBXGroup;
 			children = (
+				2A232DDD2D1752E900601581 /* EventoriasTestPlan.xctestplan */,
 				2A7781112D0040F80042B1B5 /* EventoriasApp.swift */,
 				2AEEE0462CF4A9720050AF8D /* ignore */,
 				2A1B70062CE10D7000089D4F /* Eventorias */,
-				2AEB79512D10BEFB00517464 /* EventoriasTests */,
+				2AEB79512D10BEFB00517464 /* Tests */,
+				2A3A5D392D1DB2C100045105 /* UITests */,
 				2ABB23842D03124F004DB214 /* Frameworks */,
 				2A1B70052CE10D7000089D4F /* Products */,
 			);
@@ -145,7 +185,8 @@
 			);
 			fileSystemSynchronizedGroups = (
 				2A1B70062CE10D7000089D4F /* Eventorias */,
-				2AEB79512D10BEFB00517464 /* EventoriasTests */,
+				2A3A5D392D1DB2C100045105 /* UITests */,
+				2AEB79512D10BEFB00517464 /* Tests */,
 			);
 			name = Eventorias;
 			packageProductDependencies = (
@@ -234,6 +275,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A232DDF2D17530200601581 /* EventoriasTestPlan.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -391,7 +433,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "7 en cours";
+				CURRENT_PROJECT_VERSION = "8 en cours";
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
@@ -427,7 +469,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "7 en cours";
+				CURRENT_PROJECT_VERSION = "8 en cours";
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
@@ -466,7 +508,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.leplard.EventoriasTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -487,7 +529,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.leplard.EventoriasTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -18,10 +18,13 @@ struct SearchBarComponent: View {
                 .font(.system(size: 16))
                 .foregroundColor(.evMain)
                 .padding(.leading, 8)
+                .accessibilityHidden(true)
             
             TextField("Search", text: $text)
                 .font(.system(size: 16))
                 .foregroundColor(.evMain)
+                .accessibilityLabel("Search events")
+                .accessibilityHint("Enter text to filter events")
         }
         .padding(8)
         .background(.evBackground)

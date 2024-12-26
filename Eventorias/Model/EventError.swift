@@ -12,8 +12,10 @@ import FirebaseAuth
 
 enum EventError: LocalizedError, Identifiable, Hashable {
     case invalidEmail
+    case invalidPassword
     case nameRequired
     case invalidEventData
+    case invalidAddress
     case eventCreationFailed
     case fetchEventsFailed
     case imageUploadFailed
@@ -25,10 +27,14 @@ enum EventError: LocalizedError, Identifiable, Hashable {
         switch self {
         case .invalidEmail:
             return "Please enter a valid email address"
+        case .invalidPassword:
+            return "Please enter a valid password"
         case .nameRequired:
             return "Please enter your name"
         case .invalidEventData:
             return "Please check all event details are correct"
+        case .invalidAddress:
+            return "Address is invalid"
         case .eventCreationFailed:
             return "Failed to create event. Please try again"
         case .fetchEventsFailed:

@@ -13,5 +13,7 @@ struct CustomProgressViewComponent: View {
     var body: some View {
         ProgressView()
             .progressViewStyle(CircularProgressViewStyle(tint: .evMain))
+            .accessibilityLabel("Loading")
+            .accessibilityIdentifier("loading-indicator")
     }
 }

@@ -26,6 +26,8 @@ struct CustomTextFieldComponent: View {
                         .padding(.horizontal, 8)
                         .padding(.top, 24) // Espace pour le titre flottant
                         .padding(.bottom, 8)
+                        .accessibilityLabel(title)
+                        .accessibilityHint("Multi-line text field")
                         .background(
                             // Pour positionner le titre
                             Text(title)
@@ -33,7 +35,8 @@ struct CustomTextFieldComponent: View {
                                 .foregroundColor(.evGraybis)
                                 .padding(.leading, 12)
                                 .padding(.top, 8)
-                                .frame(maxWidth: .infinity, alignment: .leading),
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityHidden(true), // Car le label est déjà sur le TextEditor
                             alignment: .topLeading
                         )
                 } else if isSecure {
@@ -43,13 +46,16 @@ struct CustomTextFieldComponent: View {
                         .padding(.horizontal, 12)
                         .padding(.top, 24)
                         .padding(.bottom, 8)
+                        .accessibilityLabel(title)
+                        .accessibilityHint("Secure text field for sensitive information")
                         .background(
                             Text(title)
                                 .font(.system(size: 12))
                                 .foregroundColor(.evGraybis)
                                 .padding(.leading, 12)
                                 .padding(.top, 8)
-                                .frame(maxWidth: .infinity, alignment: .leading),
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityHidden(true),
                             alignment: .topLeading
                         )
                 } else {
@@ -59,6 +65,8 @@ struct CustomTextFieldComponent: View {
                         .padding(.horizontal, 12)
                         .padding(.top, 24) // Espace pour le titre flottant
                         .padding(.bottom, 8)
+                        .accessibilityLabel(title)
+                        .accessibilityValue(text)
                         .background(
                             // Pour positionner le titre
                             Text(title)
@@ -66,13 +74,15 @@ struct CustomTextFieldComponent: View {
                                 .foregroundColor(.evGraybis)
                                 .padding(.leading, 12)
                                 .padding(.top, 8)
-                                .frame(maxWidth: .infinity, alignment: .leading),
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accessibilityHidden(true),
                             alignment: .topLeading
                         )
                 }
             }
             .background(.evBackground)
             .cornerRadius(6)
+            .accessibilityIdentifier("\(title.lowercased())-field")
         }
     }
 }

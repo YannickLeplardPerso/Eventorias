@@ -23,6 +23,7 @@ struct ProfileView: View {
                 Text("User profile")
                     .foregroundColor(.evMain)
                     .font(.system(size: 20))
+                    .accessibilityAddTraits(.isHeader)
                 
                 Spacer()
                 
@@ -46,6 +47,9 @@ struct ProfileView: View {
                             .font(.system(size: 60))
                     }
                 }
+                .accessibilityLabel("Profile picture")
+                .accessibilityHint("Double tap to change profile picture")
+                .accessibilityIdentifier("profile-image-button")
             }
             .padding()
             
@@ -54,6 +58,7 @@ struct ProfileView: View {
                 placeholder: "",
                 text: $viewModel.userName
             )
+            .accessibilityIdentifier("username-textfield")
             .disabled(true)
             .padding(.horizontal)
             .onChange(of: viewModel.userName) { oldValue, newValue in
@@ -65,6 +70,7 @@ struct ProfileView: View {
                 placeholder: "",
                 text: $viewModel.userEmail
             )
+            .accessibilityIdentifier("email-textfield")
             .disabled(true)
             .padding(.horizontal)
             
@@ -72,9 +78,12 @@ struct ProfileView: View {
                 Toggle("Notifications", isOn: $viewModel.notificationsEnabled)
                     .tint(.evRed)
                     .labelsHidden()
+                    .accessibilityLabel("Enable notifications")
+                    .accessibilityIdentifier("notifications-toggle")
                 
                 Text("Notifications")
                     .foregroundColor(.evGray)
+                    .accessibilityHidden(true)
                 
                 Spacer()
             }
