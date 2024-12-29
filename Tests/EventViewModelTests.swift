@@ -90,7 +90,7 @@ import PhotosUI
     )
     
     await viewModel.geocodeAddress("!!!@@@###") //("Nowhere !") renvoie une géolocalisation valide quelque-part au Pakistan ???! (34°00'24.9"N 72°00'16.2"E = Nowshera)
-    try? await Task.sleep(for: .seconds(2))
+//    try? await Task.sleep(for: .seconds(2))
     
     #expect(viewModel.isFormValid == false)
     #expect(viewModel.newEvent.location.latitude == nil)
@@ -108,7 +108,7 @@ import PhotosUI
     )
     
     await viewModel.geocodeAddress(viewModel.newEvent.location.address)
-    try? await Task.sleep(for: .seconds(2))
+//    try? await Task.sleep(for: .seconds(2))
     
     #expect(viewModel.isFormValid == true)
     #expect(viewModel.newEvent.location.latitude != nil)

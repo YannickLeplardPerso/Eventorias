@@ -21,8 +21,13 @@ class EventViewModel: ObservableObject {
     @Published var error: EventError?
     @Published var isLoading = false
     @Published var searchText = ""
+    // NEW
+    @Published var selectedItem: PhotosPickerItem? {
+        didSet {
+            handleSelectedItem()
+        }
+    }
     
-    @Published var selectedItem: PhotosPickerItem?
     @Published var selectedImage: UIImage?
     
     @Published var creatorPhotoURL: String?
@@ -53,49 +58,18 @@ class EventViewModel: ObservableObject {
     }
     
     func resetNewEvent() {
+        // Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
         newEvent = Self.createEmptyEvent()
         selectedImage = nil
         selectedItem = nil
     }
     
-//    func geocodeAddress(_ address: String) {
-//        print("geocodeAddress : \(address)")
-//        guard !address.isEmpty else {
-//            self.error = .invalidAddress
-//            return
-//        }
-//        print("geocodeAddress: address not empty")
-//        
-//        let geocoder = CLGeocoder()
-//        geocoder.geocodeAddressString(address) { placemarks, error in
-//            DispatchQueue.main.async {
-//                if error != nil {
-//                    self.error = .invalidAddress
-//                    self.newEvent.location = EventLocation(address: address, latitude: nil, longitude: nil)
-//                    return
-//                }
-//                
-//                if let coordinates = placemarks?.first?.location?.coordinate {
-//                    self.newEvent.location = EventLocation(
-//                        address: address,
-//                        latitude: coordinates.latitude,
-//                        longitude: coordinates.longitude
-//                    )
-//                    self.cameraPosition = .region(MKCoordinateRegion(
-//                        center: coordinates,
-//                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-//                    ))
-//                } else {
-//                    self.error = .invalidAddress
-//                    self.newEvent.location = EventLocation(address: address, latitude: nil, longitude: nil)
-//                }
-//            }
-//        }
-//    }
     func geocodeAddress(_ address: String) async {
-        guard !address.isEmpty else {
-            self.error = .invalidAddress
-            return
+        await MainActor.run {
+            guard !address.isEmpty else {
+                self.error = .invalidAddress
+                return
+            }
         }
         
         let geocoder = CLGeocoder()
@@ -103,23 +77,27 @@ class EventViewModel: ObservableObject {
         do {
             let placemarks = try await geocoder.geocodeAddressString(address)
             
-            guard let coordinates = placemarks.first?.location?.coordinate else {
+            await MainActor.run {
+                guard let coordinates = placemarks.first?.location?.coordinate else {
+                    self.error = .invalidAddress
+                    self.newEvent.location = EventLocation(address: address, latitude: nil, longitude: nil)
+                    return
+                }
+                
+                self.newEvent.location = EventLocation(
+                    address: address,
+                    latitude: coordinates.latitude,
+                    longitude: coordinates.longitude
+                )
+            }
+        } catch {
+            await MainActor.run {
                 self.error = .invalidAddress
                 self.newEvent.location = EventLocation(address: address, latitude: nil, longitude: nil)
-                return
             }
-            
-            // Mise à jour du modèle
-            self.newEvent.location = EventLocation(
-                address: address,
-                latitude: coordinates.latitude,
-                longitude: coordinates.longitude
-            )
-        } catch {
-            self.error = .invalidAddress
-            self.newEvent.location = EventLocation(address: address, latitude: nil, longitude: nil)
         }
     }
+
     
     func updateCameraPosition(for event: Event) -> MapCameraPosition {
         guard let latitude = event.location.latitude,
@@ -180,7 +158,6 @@ class EventViewModel: ObservableObject {
     var filteredEvents: [Event] {
         var filtered = events
         
-        // Appliquer le filtre de recherche
         if !searchText.isEmpty {
             filtered = filtered.filter { event in
                 event.title.localizedCaseInsensitiveContains(searchText) ||
@@ -189,7 +166,6 @@ class EventViewModel: ObservableObject {
             }
         }
         
-        // Appliquer le filtre de catégorie et le tri
         switch currentSort {
         case .date(let ascending):
             filtered.sort { event1, event2 in
@@ -218,139 +194,67 @@ class EventViewModel: ObservableObject {
         }
     }
     
-    func addEvent(completion: @escaping () -> Void) {
-        print("ADD EVENT WITHOUT IMAGE")
+    private func addEventAsync() async throws {
         guard isFormValid else {
-            error = .invalidEventData
-            return
+            throw EventError.invalidEventData
         }
-        
+        // Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
         newEvent.creatorId = Auth.auth().currentUser?.uid ?? ""
         newEvent.createdAt = Date()
         
-        do {
-            try db.collection("events").addDocument(from: newEvent)
-            resetNewEvent()
-            completion()
-        } catch {
-            self.error = .eventCreationFailed
-        }
+        try db.collection("events").addDocument(from: newEvent)
+        resetNewEvent()
     }
     
-    func addEventWithImage(completion: @escaping () -> Void) {
-        Task { @MainActor in
-            // Géocodage asynchrone
-            await geocodeAddress(newEvent.location.address)
-            
-            print("--- title : \(newEvent.title), location latitude: \(String(describing: newEvent.location.latitude)), location longitude : \(String(describing: newEvent.location.longitude))")
-            
+    func addEventWithImage() async throws {
+        await MainActor.run {
             guard isFormValid else {
                 error = .invalidEventData
                 return
             }
-            
             isLoading = true
-            
+        }
+        
+        do {
             if let image = selectedImage {
-                uploadImage(image) { [weak self] imageUrl in
-                    guard let self = self else { return }
+                if let imageUrl = try await uploadImageAsync(image) {
+                    if let currentUser = Auth.auth().currentUser {
+                        await MainActor.run {
+                            newEvent.creatorId = currentUser.uid
+                            newEvent.creatorImageUrl = currentUser.photoURL?.absoluteString
+                            newEvent.createdAt = Date()
+                            newEvent.imageUrl = imageUrl
+                        }
+                    }
                     
-                    if let imageUrl = imageUrl {
-                        if let currentUser = Auth.auth().currentUser {
-                            self.newEvent.creatorId = currentUser.uid
-                            self.newEvent.creatorImageUrl = currentUser.photoURL?.absoluteString
-                            self.newEvent.createdAt = Date()
-                            self.newEvent.imageUrl = imageUrl
-                        }
-                        
-                        do {
-                            try self.db.collection("events").addDocument(from: self.newEvent)
-                            self.resetNewEvent()
-                            DispatchQueue.main.async {
-                                self.isLoading = false
-                                completion()
-                            }
-                        } catch {
-                            DispatchQueue.main.async {
-                                self.error = .eventCreationFailed
-                                self.isLoading = false
-                            }
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self.error = .imageUploadFailed
-                            self.isLoading = false
-                        }
+                    try db.collection("events").addDocument(from: newEvent)
+                    await MainActor.run {
+                        resetNewEvent()
+                        isLoading = false
+                    }
+                } else {
+                    await MainActor.run {
+                        error = .imageUploadFailed
+                        isLoading = false
                     }
                 }
             } else {
-                addEvent {
-                    self.isLoading = false
-                    completion()
+                try await addEventAsync()
+                await MainActor.run {
+                    isLoading = false
                 }
+            }
+        } catch {
+            await MainActor.run {
+                self.error = .eventCreationFailed
+                isLoading = false
             }
         }
     }
-    
-//    func addEventWithImage(completion: @escaping () -> Void) {
-//        // temp
-//        geocodeAddress(newEvent.location.address)
-//        
-//        print("--- title : \(newEvent.title), location latitude: \(String(describing: newEvent.location.latitude)), location longitude : \(String(describing: newEvent.location.longitude))")
-//        guard isFormValid else {
-//            error = .invalidEventData
-//            return
-//        }
-//        
-//        isLoading = true
-//        
-//        if let image = selectedImage {
-//            uploadImage(image) { [weak self] imageUrl in
-//                guard let self = self else { return }
-//                
-//                if let imageUrl = imageUrl {
-//                    if let currentUser = Auth.auth().currentUser {
-//                        self.newEvent.creatorId = currentUser.uid
-//                        self.newEvent.creatorImageUrl = currentUser.photoURL?.absoluteString
-//                        self.newEvent.createdAt = Date()
-//                        self.newEvent.imageUrl = imageUrl
-//                    }
-//                    
-//                    do {
-//                        try self.db.collection("events").addDocument(from: self.newEvent)
-//                        self.resetNewEvent()
-//                        DispatchQueue.main.async {
-//                            self.isLoading = false
-//                            completion()
-//                        }
-//                    } catch {
-//                        DispatchQueue.main.async {
-//                            self.error = .eventCreationFailed
-//                            self.isLoading = false
-//                        }
-//                    }
-//                } else {
-//                    DispatchQueue.main.async {
-//                        self.error = .imageUploadFailed
-//                        self.isLoading = false
-//                    }
-//                }
-//            }
-//        } else {
-//            addEvent {
-//                self.isLoading = false
-//                completion()
-//            }
-//        }
-//    }
-    
-    func uploadImage(_ image: UIImage, completion: @escaping (String?) -> Void) {
+
+    private func uploadImageAsync(_ image: UIImage) async throws -> String? {
         guard let imageData = image.jpegData(compressionQuality: 0.5) else {
-            DispatchQueue.main.async {
-                self.error = .imageProcessingFailed
-            }
-            completion(nil)
-            return
+            throw EventError.imageProcessingFailed
         }
         
         let storageRef = Storage.storage().reference()
@@ -359,27 +263,9 @@ class EventViewModel: ObservableObject {
         let metadata = StorageMetadata()
         metadata.contentType = "image/jpeg"
         
-        imageRef.putData(imageData, metadata: metadata) { metadata, error in
-            if error != nil {
-                DispatchQueue.main.async {
-                    self.error = .imageUploadFailed
-                }
-                completion(nil)
-                return
-            }
-            
-            imageRef.downloadURL { url, error in
-                if error != nil {
-                    DispatchQueue.main.async {
-                        self.error = .imageUploadFailed
-                    }
-                    completion(nil)
-                    return
-                }
-                
-                completion(url?.absoluteString)
-            }
-        }
+        let _ = try await imageRef.putDataAsync(imageData, metadata: metadata)
+        let url = try await imageRef.downloadURL()
+        return url.absoluteString
     }
     
     func handleSelectedItem() {

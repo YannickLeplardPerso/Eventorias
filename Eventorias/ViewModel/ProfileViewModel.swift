@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 import FirebaseAuth
 import FirebaseStorage
@@ -21,19 +22,17 @@ class ProfileViewModel: ObservableObject {
     @Published var profileImageUrl: String?
     @Published var isLoading: Bool = false
     @Published var error: EventError?
+    // NEW
+    @Published var selectedItem: PhotosPickerItem? {
+        didSet {
+            handleSelectedItem()
+        }
+    }
     
     private let storage = Storage.storage()
     
     init() {
         loadUserProfile()
-    }
-    
-    private func loadUserProfile() {
-        if let user = Auth.auth().currentUser {
-            userEmail = user.email ?? ""
-            userName = user.displayName ?? ""
-            profileImageUrl = user.photoURL?.absoluteString
-        }
     }
     
     func updateUserProfile() {
@@ -54,7 +53,7 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    func uploadProfileImage(_ image: UIImage) {
+    private func uploadProfileImage(_ image: UIImage) {
         guard let userId = Auth.auth().currentUser?.uid,
               let imageData = image.jpegData(compressionQuality: 0.5) else {
             error = .imageProcessingFailed
@@ -86,6 +85,35 @@ class ProfileViewModel: ObservableObject {
                     }
                 }
             }
+        }
+    }
+    
+    // NEW
+    private func handleSelectedItem() {
+        guard let item = selectedItem else { return }
+        
+        Task {
+            do {
+                if let data = try await item.loadTransferable(type: Data.self),
+                   let image = UIImage(data: data) {
+                    await MainActor.run {
+                        self.selectedImage = image
+                        self.uploadProfileImage(image)
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    self.error = .imageProcessingFailed
+                }
+            }
+        }
+    }
+    
+    private func loadUserProfile() {
+        if let user = Auth.auth().currentUser {
+            userEmail = user.email ?? ""
+            userName = user.displayName ?? ""
+            profileImageUrl = user.photoURL?.absoluteString
         }
     }
     

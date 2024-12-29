@@ -1,14 +1,25 @@
+build 9 : 
+= modification des fonctions asynchrones pour utiliser des await/async plutôt que des completion/closures
+= logique pour selectedItem du PhotosPickerItem déplacée dans le profile view model
+= création d'un enum AccessID pour tous les AccessibilityIdentifiers
+= correction eventList view pour que la liste n'empiète pas sur la tabview
+= revue de lagestion des erreurs dans AddEvent view et correction de l'upload d'image 
+
+
+
+ 
+todo :
+= tests unitaires avec mock firebase
+= tests d'interface
+
+
+
 build 8
 + tri par date chronologique/inverse ou par catégorie (=filtrage)
 + ajout validation adresse dans le view model : séparation geocodage en 2 fonctions (coordonnées, visualisation)
 + ajout accessibilité (avec identifiers pour tests UI)
 + tests unitaires view models (sans mock pour les fonctions firebase)
 
-
-bugs : 
-= ajout image new event
-= revoir addeEvent et addEventWithImage ??
-= revoir upload image event et toutes les images du profil ne s'affichent pas toujours
 
 
 
@@ -39,13 +50,6 @@ La fonctionnalité de partage pour diffuser des événements via des application
 
 
 
-TODO
-- faire tests unitaires
-- faire accesiibilité
-- faire tests UI
-- revoir code
-
-
 
 Des mesures d'accessibilité seront mises en oeuvre, telles que le contraste élevé des couleurs et les descriptions audio pour les éléments interactifs
 
@@ -53,10 +57,6 @@ Assurer la réactivité de la recherche en filtrant les événements en temps r�
 
 
 
-
-Un système de gestion des invités sera également intégré pour faciliter le suivi des participations
-
-// 
 Des notifications automatiques seront envoyées aux utilisateurs pour les informerdes événements à venir et des mises à jour importantes, renforçant l'interaction utilisateur.
 // NE PAS FAIRE
 

@@ -20,7 +20,7 @@ struct EventListView: View {
                 SearchBarComponent(text: $viewModel.searchText)
                     .padding(.horizontal)
                     .padding(.vertical, 4)
-                    .accessibilityIdentifier("search-bar")
+                    .accessibilityIdentifier(AccessID.eventSearch)
                 
                 SortButtonComponent(
                     selectedSort: $viewModel.currentSort,
@@ -29,7 +29,7 @@ struct EventListView: View {
                     }
                 )
                 .padding(.horizontal)
-                .accessibilityIdentifier("sort-button")
+                .accessibilityIdentifier(AccessID.eventSort)
                 
                 List {
                     if viewModel.events.isEmpty {
@@ -47,15 +47,16 @@ struct EventListView: View {
                             }
                             .accessibilityLabel("Event: \(event.title)")
                             .accessibilityHint("Double tap to view event details")
-                            .accessibilityIdentifier("event-card-\(event.id ?? UUID().uuidString)")
+                            .accessibilityIdentifier(AccessID.eventCard(event.id ?? ""))
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
                         }
                     }
                 }
                 .listStyle(PlainListStyle())
-                .accessibilityIdentifier("events-list")
+                .accessibilityIdentifier(AccessID.eventList)
             }
+            .padding(.bottom)
             
             // Bouton flottant
             VStack {
@@ -74,7 +75,7 @@ struct EventListView: View {
                     }
                     .accessibilityLabel("Add new event")
                     .accessibilityHint("Opens form to create new event")
-                    .accessibilityIdentifier("add-event-button")
+                    .accessibilityIdentifier(AccessID.eventAdd)
                     .padding(.trailing, 20)
                     .padding(.bottom, 70)
                 }
@@ -83,18 +84,6 @@ struct EventListView: View {
         .onAppear {
             viewModel.fetchEvents()
         }
-        
-//        .onAppear {
-//            if Auth.auth().currentUser != nil {
-//                viewModel.fetchEvents()
-//            }
-//        }
-//        .onChange(of: Auth.auth().currentUser) { _, newUser in
-//            if newUser != nil {
-//                viewModel.fetchEvents()
-//            }
-//        }
-        
         .navigationDestination(isPresented: Binding(get: { selectedEvent != nil },
                                                   set: { if !$0 { selectedEvent = nil } })) {
             if let event = selectedEvent {

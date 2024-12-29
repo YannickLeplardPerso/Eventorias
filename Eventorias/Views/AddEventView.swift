@@ -105,8 +105,27 @@ struct AddEventView: View {
             }
 
             Button(action: {
-                viewModel.addEventWithImage {
-                    dismiss()
+                Task {
+                    do {
+                        if viewModel.newEvent.title.isEmpty {
+                            viewModel.error = .titleRequired
+                            return
+                        }
+                        if viewModel.newEvent.location.address.isEmpty {
+                            viewModel.error = .addressRequired
+                            return
+                        }
+                        await viewModel.geocodeAddress(viewModel.newEvent.location.address)
+                        
+                        try await viewModel.addEventWithImage()
+                        dismiss()
+                    } catch {
+                        if let eventError = error as? EventError {
+                            viewModel.error = eventError
+                        } else {
+                            viewModel.error = .eventCreationFailed
+                        }
+                    }
                 }
             }) {
                 if viewModel.isLoading {
@@ -124,7 +143,6 @@ struct AddEventView: View {
             .accessibilityLabel("Create event")
             .accessibilityHint(viewModel.isFormValid ? "Double tap to create event" : "Form is incomplete")
             .accessibilityIdentifier("create-event-button")
-//            .disabled(!viewModel.isFormValid || viewModel.isLoading)
             .padding(.horizontal)
             .padding(.bottom, 20)
         }

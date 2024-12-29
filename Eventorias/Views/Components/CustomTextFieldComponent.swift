@@ -82,7 +82,7 @@ struct CustomTextFieldComponent: View {
             }
             .background(.evBackground)
             .cornerRadius(6)
-            .accessibilityIdentifier("\(title.lowercased())-field")
+            .accessibilityIdentifier(AccessID.customTextField(title))
         }
     }
 }

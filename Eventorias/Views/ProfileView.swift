@@ -12,7 +12,7 @@ import PhotosUI
 
 struct ProfileView: View {
     @ObservedObject var viewModel: ProfileViewModel
-    @State private var selectedItem: PhotosPickerItem? = nil
+//    @State private var selectedItem: PhotosPickerItem? = nil
     @State private var showImagePicker = false
     @State private var showActionSheet = false
     @State private var showLibrary = false
@@ -49,7 +49,7 @@ struct ProfileView: View {
                 }
                 .accessibilityLabel("Profile picture")
                 .accessibilityHint("Double tap to change profile picture")
-                .accessibilityIdentifier("profile-image-button")
+                .accessibilityIdentifier(AccessID.profileImage)
             }
             .padding()
             
@@ -58,7 +58,7 @@ struct ProfileView: View {
                 placeholder: "",
                 text: $viewModel.userName
             )
-            .accessibilityIdentifier("username-textfield")
+            .accessibilityIdentifier(AccessID.profileUsername)
             .disabled(true)
             .padding(.horizontal)
             .onChange(of: viewModel.userName) { oldValue, newValue in
@@ -70,7 +70,7 @@ struct ProfileView: View {
                 placeholder: "",
                 text: $viewModel.userEmail
             )
-            .accessibilityIdentifier("email-textfield")
+            .accessibilityIdentifier(AccessID.profileEmail)
             .disabled(true)
             .padding(.horizontal)
             
@@ -79,7 +79,7 @@ struct ProfileView: View {
                     .tint(.evRed)
                     .labelsHidden()
                     .accessibilityLabel("Enable notifications")
-                    .accessibilityIdentifier("notifications-toggle")
+                    .accessibilityIdentifier(AccessID.profileNotifications)
                 
                 Text("Notifications")
                     .foregroundColor(.evGray)
@@ -106,17 +106,22 @@ struct ProfileView: View {
             ImagePickerComponent(selectedImage: $viewModel.selectedImage)
         }
         .photosPicker(isPresented: $showLibrary,
-                      selection: $selectedItem,
+                      selection: $viewModel.selectedItem, //$selectedItem,
                       matching: .images)
-        .onChange(of: selectedItem) { oldValue, newValue in
-            Task {
-                if let data = try? await newValue?.loadTransferable(type: Data.self),
-                   let image = UIImage(data: data) {
-                    viewModel.selectedImage = image
-                    viewModel.uploadProfileImage(image)
-                }
-            }
-        }
+//        .onChange(of: selectedItem) { oldValue, newValue in
+//            Task {
+//                do {
+//                    if let data = try await newValue?.loadTransferable(type: Data.self),
+//                       let image = UIImage(data: data) {
+//                        viewModel.selectedImage = image
+//                        viewModel.uploadProfileImage(image)
+//                    }
+//                }
+//                catch {
+//                    viewModel.error = .imageProcessingFailed
+//                }
+//            }
+//        }
         .overlay {
             if viewModel.isLoading {
                 CustomProgressViewComponent()

@@ -33,7 +33,7 @@ struct SortMenuComponent: View {
                     }
                 }
                 .accessibilityLabel("Trier du plus récent au plus ancien")
-                .accessibilityIdentifier("sort-recent-to-old")
+                .accessibilityIdentifier(AccessID.sortRecentToOld)
                 
                 Button {
                     onSortSelected(.date(ascending: true))
@@ -50,9 +50,9 @@ struct SortMenuComponent: View {
                     }
                 }
                 .accessibilityLabel("Trier du plus ancien au plus récent")
-                .accessibilityIdentifier("sort-old-to-recent")
+                .accessibilityIdentifier(AccessID.sortOldToRecent)
             }
-            .accessibilityIdentifier("date-sort-section")
+            .accessibilityIdentifier(AccessID.sortDateSection)
             
             Section("Par Catégorie") {
                 Button {
@@ -88,10 +88,10 @@ struct SortMenuComponent: View {
                         }
                     }
                     .accessibilityLabel("Filtrer par catégorie \(category.rawValue)")
-                    .accessibilityIdentifier("sort-category-\(category.rawValue.lowercased())")
+                    .accessibilityIdentifier(AccessID.sortCategory(category.rawValue))
                 }
             }
-            .accessibilityIdentifier("category-sort-section")
+            .accessibilityIdentifier(AccessID.sortCategorySection)
         }
         .accessibilityElement(children: .contain)
     }

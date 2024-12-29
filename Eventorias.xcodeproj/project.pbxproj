@@ -69,6 +69,13 @@
 			);
 			target = 2A1B70032CE10D7000089D4F /* Eventorias */;
 		};
+		2A8686C62D20150F000C78F7 /* Exceptions for "Eventorias" folder in "EventoriasTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/EventAccessibilityIdentifiers.swift,
+			);
+			target = 2A7BB3F12D1089B8005CFC39 /* EventoriasTests */;
+		};
 		2A8B79B02D08794F00FCBD0C /* Exceptions for "Eventorias" folder in "Eventorias" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -83,6 +90,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				2A8B79B02D08794F00FCBD0C /* Exceptions for "Eventorias" folder in "Eventorias" target */,
+				2A8686C62D20150F000C78F7 /* Exceptions for "Eventorias" folder in "EventoriasTests" target */,
 			);
 			path = Eventorias;
 			sourceTree = "<group>";
@@ -433,7 +441,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "8 en cours";
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
@@ -469,7 +477,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "8 en cours";
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
