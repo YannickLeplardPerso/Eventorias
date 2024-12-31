@@ -56,6 +56,7 @@ struct AddEventView: View {
                         placeholder: "Enter full address",
                         text: $viewModel.newEvent.location.address
                     )
+                    .textContentType(.fullStreetAddress)
                     .accessibilityIdentifier("event-address-input")
 
                     CategorySelectorComponent(

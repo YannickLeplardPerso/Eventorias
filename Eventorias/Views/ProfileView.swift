@@ -12,7 +12,6 @@ import PhotosUI
 
 struct ProfileView: View {
     @ObservedObject var viewModel: ProfileViewModel
-//    @State private var selectedItem: PhotosPickerItem? = nil
     @State private var showImagePicker = false
     @State private var showActionSheet = false
     @State private var showLibrary = false
@@ -106,22 +105,8 @@ struct ProfileView: View {
             ImagePickerComponent(selectedImage: $viewModel.selectedImage)
         }
         .photosPicker(isPresented: $showLibrary,
-                      selection: $viewModel.selectedItem, //$selectedItem,
+                      selection: $viewModel.selectedItem,
                       matching: .images)
-//        .onChange(of: selectedItem) { oldValue, newValue in
-//            Task {
-//                do {
-//                    if let data = try await newValue?.loadTransferable(type: Data.self),
-//                       let image = UIImage(data: data) {
-//                        viewModel.selectedImage = image
-//                        viewModel.uploadProfileImage(image)
-//                    }
-//                }
-//                catch {
-//                    viewModel.error = .imageProcessingFailed
-//                }
-//            }
-//        }
         .overlay {
             if viewModel.isLoading {
                 CustomProgressViewComponent()

@@ -6,6 +6,12 @@
 //
 
 enum AccessID {
+    static let signSubmit = "sign-submit-button"
+    static let signToggle = "sign-toggle-button"
+    static let signName = "sign-name-textfield"
+    static let signEmail = "sign-email-textfield"
+    static let signPassword = "sign-password-textfield"
+    
     static let loading = "loading-indicator"
     static let profileImage = "profile-image-button"
     static let profileUsername = "profile-username-textfield"

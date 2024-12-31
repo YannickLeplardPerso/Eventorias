@@ -10,16 +10,16 @@ import Testing
 
 
 
-@Test func testSignInWithEmptyEmail() {
+@Test func testSignInWithEmptyEmail() async {
     let viewModel = AuthViewModel()
-    viewModel.signIn(email: "", password: "Qswd123!!AlNb1@") {}
+    await viewModel.signIn(email: "", password: "Qswd123!!AlNb1@")
     
     #expect(viewModel.error == EventError.invalidEmail)
 }
 
-@Test func testSignInWithEmptyPassword() {
+@Test func testSignInWithEmptyPassword() async {
     let viewModel = AuthViewModel()
-    viewModel.signIn(email: "yannick@gmail.com", password: "") {}
+    await viewModel.signIn(email: "yannick@gmail.com", password: "")
     
     #expect(viewModel.error == EventError.invalidPassword)
 }
@@ -31,23 +31,23 @@ import Testing
 //    #expect(viewModel.error == nil)
 //}
 
-@Test func testSignUpWithEmptyName() {
+@Test func testSignUpWithEmptyName() async {
     let viewModel = AuthViewModel()
-    viewModel.signUp(email: "test@gmail.com", password: "Qswd123!!AlNb1@", name: "") {}
+    await viewModel.signUp(email: "test@gmail.com", password: "Qswd123!!AlNb1@", name: "")
     
     #expect(viewModel.error == EventError.nameRequired)
 }
 
-@Test func testSignUpWithEmptyEmail() {
+@Test func testSignUpWithEmptyEmail() async {
     let viewModel = AuthViewModel()
-    viewModel.signUp(email: "", password: "Qswd123!!AlNb1@", name: "Yannick") {}
+    await viewModel.signUp(email: "", password: "Qswd123!!AlNb1@", name: "Yannick")
     
     #expect(viewModel.error == EventError.invalidEmail)
 }
 
-@Test func testSignUpWithEmptyPassword() {
+@Test func testSignUpWithEmptyPassword() async {
     let viewModel = AuthViewModel()
-    viewModel.signUp(email: "test@gmail.com", password: "", name: "Yannick") {}
+    await viewModel.signUp(email: "test@gmail.com", password: "", name: "Yannick")
     
     #expect(viewModel.error == EventError.invalidPassword)
 }

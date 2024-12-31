@@ -27,8 +27,9 @@ struct LoginSheetView: View {
                         placeholder: "Enter your first name and last name",
                         text: $name
                     )
+                    .textContentType(.name)
                     .padding(.horizontal)
-                    .accessibilityIdentifier("name-input")
+                    .accessibilityIdentifier(AccessID.signName)
                 }
                 
                 CustomTextFieldComponent(
@@ -36,10 +37,11 @@ struct LoginSheetView: View {
                     placeholder: "Enter your email",
                     text: $email
                 )
-                .padding(.horizontal)
+                .textContentType(.emailAddress)
                 .textInputAutocapitalization(.never)
                 .keyboardType(.emailAddress)
-                .accessibilityIdentifier("email-input")
+                .padding(.horizontal)
+                .accessibilityIdentifier(AccessID.signEmail)
                 
                 CustomTextFieldComponent(
                     title: "Password",
@@ -47,20 +49,21 @@ struct LoginSheetView: View {
                     text: $password,
                     isSecure: true
                 )
+                .textContentType(isSignUp ? .newPassword : .password)
                 .padding(.horizontal)
-                .accessibilityIdentifier("password-input")
+                .accessibilityIdentifier(AccessID.signPassword)
                 
                 if viewModel.isLoading {
                     CustomProgressViewComponent()
                 } else {
                     Button(action: {
-                        if isSignUp {
-                            viewModel.signUp(email: email, password: password, name: name) {
-                                isPresented = false
-                            }
-                        } else {
-                            viewModel.signIn(email: email, password: password) {
-                                isPresented = false
+                        Task {
+                            if isSignUp {
+                                await viewModel.signUp(email: email, password: password, name: name)
+                                isPresented = !viewModel.isAuthenticated
+                            } else {
+                                await viewModel.signIn(email: email, password: password)
+                                isPresented = !viewModel.isAuthenticated
                             }
                         }
                     }) {
@@ -70,11 +73,10 @@ struct LoginSheetView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(email.isEmpty || password.isEmpty || (isSignUp && name.isEmpty) ? .gray.opacity(0.3) : .evRed)
-                                    .cornerRadius(8)
-//                            .background(.evRed)
+                            .cornerRadius(8)
                             .cornerRadius(8)
                     }
-                    .accessibilityIdentifier("submit-button")
+                    .accessibilityIdentifier(AccessID.signSubmit)
                     .accessibilityLabel(isSignUp ? "Sign up button" : "Sign in button")
                     .disabled(email.isEmpty || password.isEmpty || (isSignUp && name.isEmpty))
                     .padding(.horizontal)
@@ -85,7 +87,7 @@ struct LoginSheetView: View {
                         Text(isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up")
                             .foregroundColor(.blue)
                     }
-                    .accessibilityIdentifier("toggle-mode-button")
+                    .accessibilityIdentifier(AccessID.signToggle)
                     .accessibilityLabel(isSignUp ? "Switch to sign in" : "Switch to sign up")
                 }
                 

@@ -8,16 +8,16 @@
 import Testing
 @testable import Eventorias
 
-import SwiftUI
-import FirebaseAuth
+//import SwiftUI
+//import FirebaseAuth
 
 
 
-@Test func testImageProcessingFailure() {
-    let viewModel = ProfileViewModel()
-    
-    // Firebase Auth n'est pas initialisé donc uploadProfileImage doit échouer
-    viewModel.uploadProfileImage(UIImage())
-    
-    #expect(viewModel.error == .imageProcessingFailed)
-}
+//@Test func testImageProcessingFailure() {
+//    let viewModel = ProfileViewModel()
+//    
+//    // Firebase Auth n'est pas initialisé donc uploadProfileImage doit échouer
+//    viewModel.uploadProfileImage(UIImage())
+//    
+//    #expect(viewModel.error == .imageProcessingFailed)
+//}

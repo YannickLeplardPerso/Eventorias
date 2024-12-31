@@ -19,6 +19,13 @@
         "identifier" : "2A7BB3F12D1089B8005CFC39",
         "name" : "EventoriasTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Eventorias.xcodeproj",
+        "identifier" : "2A8A4DD52D22D982001DCE65",
+        "name" : "EventoriasUITests"
+      }
     }
   ],
   "version" : 1

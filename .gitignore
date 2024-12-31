@@ -1,7 +1,7 @@
 # Fichiers à ne pas sauvegarder.
-ignore/
-#GoogleService-Info.plist
-#History.md
+#fichiers du répertoire ignore
+./ignore/GoogleService-Info.plist
+./ignore/history.md
 
 # Xcode
 ## User settings

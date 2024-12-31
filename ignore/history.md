@@ -1,18 +1,17 @@
+
+
+build 10 : 
+= ajout d'identifiers manquants (pour les tests UI)
+= ajout de textContentType pour les textField
+= modification des fonctions signIn et SignUp dans AuthViewModel pour ne plus avoir de completion
+
+
 build 9 : 
 = modification des fonctions asynchrones pour utiliser des await/async plutôt que des completion/closures
 = logique pour selectedItem du PhotosPickerItem déplacée dans le profile view model
 = création d'un enum AccessID pour tous les AccessibilityIdentifiers
 = correction eventList view pour que la liste n'empiète pas sur la tabview
 = revue de lagestion des erreurs dans AddEvent view et correction de l'upload d'image 
-
-
-
- 
-todo :
-= tests unitaires avec mock firebase
-= tests d'interface
-
-
 
 build 8
 + tri par date chronologique/inverse ou par catégorie (=filtrage)
@@ -21,17 +20,18 @@ build 8
 + tests unitaires view models (sans mock pour les fonctions firebase)
 
 
+todo :
+= tests unitaires avec mock firebase
+= tests d'interface
 
 
 
 
-Un système de gestion des invités sera également intégré pour faciliter le suivi des participations.
 
-Vue calendrier en plus de la vue en liste ?
+! le système de gestion des invités, la vue "calendrier", le partage via des réseaux sociaux ne seront pas implémentés
 
-Des notifications automatiques seront envoyées aux utilisateurs 
+! Idem pour les notifications automatiques envoyées aux utilisateurs (clairement indiqué dans le projet) 
 
-La fonctionnalité de partage pour diffuser des événements via des applications de messagerie et des réseaux sociaux
 
 
 
@@ -50,17 +50,8 @@ La fonctionnalité de partage pour diffuser des événements via des application
 
 
 
-
-Des mesures d'accessibilité seront mises en oeuvre, telles que le contraste élevé des couleurs et les descriptions audio pour les éléments interactifs
-
 Assurer la réactivité de la recherche en filtrant les événements en temps réel, via les méthodes fournit par Firebase directement (ex : ne pas récupérer tous les événements et filtrer ensuite dans votre code).
 
-
-
-Des notifications automatiques seront envoyées aux utilisateurs pour les informerdes événements à venir et des mises à jour importantes, renforçant l'interaction utilisateur.
-// NE PAS FAIRE
-
-La fonctionnalité de partage permettra aux utilisateurs de diffuser des événements via des applications de messagerie et des réseaux sociaux, augmentant ainsi la portée et la visibilité de leurs événements.
 
 
 

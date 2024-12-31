@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1610"
+   LastUpgradeVersion = "1620"
    version = "2.1">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -47,6 +47,19 @@
             default = "YES">
          </TestPlanReference>
       </TestPlans>
+      <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2A8A4DD52D22D982001DCE65"
+               BuildableName = "EventoriasUITests.xctest"
+               BlueprintName = "EventoriasUITests"
+               ReferencedContainer = "container:Eventorias.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
