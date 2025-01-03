@@ -5,10 +5,49 @@
 //  Created by Yannick LEPLARD on 30/12/2024.
 //
 
-//import FirebaseAuth
+import FirebaseAuth
 
 
-// SUPPR ?
+
+class FirebaseAuthService: AuthServiceProtocol {
+    private let auth = Auth.auth()
+    
+    var currentUser: UserProtocol? {
+        auth.currentUser.map(FirebaseUser.init)
+    }
+    
+    func signIn(email: String, password: String) async throws -> UserProtocol {
+        let result = try await auth.signIn(withEmail: email, password: password)
+        return FirebaseUser(user: result.user)
+    }
+    
+    func signUp(email: String, password: String, name: String) async throws -> UserProtocol {
+        let result = try await auth.createUser(withEmail: email, password: password)
+        let user = FirebaseUser(user: result.user)
+        try await user.updateProfile(displayName: name)
+        return user
+    }
+}
+
+class FirebaseUser: UserProtocol {
+    private let user: User
+    
+    init(user: User) {
+        self.user = user
+    }
+    
+    var uid: String { user.uid }
+    var email: String? { user.email }
+    var displayName: String? { user.displayName }
+    var photoURL: URL? { user.photoURL }
+    
+    func updateProfile(displayName: String?) async throws {
+        let request = user.createProfileChangeRequest()
+        request.displayName = displayName
+        try await request.commitChanges()
+        try await user.reload()
+    }
+}
 //extension User: UserProtocol {
 //    // pas besoin d'implémenter uid, email, displayName, photoURL
 //    // car ils existent déjà dans User

@@ -7,6 +7,7 @@
 
 import Testing
 @testable import Eventorias
+import Foundation
 
 
 
@@ -24,12 +25,15 @@ import Testing
     #expect(viewModel.error == EventError.invalidPassword)
 }
 
-//@Test func testSuccessfulSignIn() async {
-//    let viewModel = AuthViewModel(auth: MockFirebaseAuth())
-//    viewModel.signIn(email: "test@gmail.com", password: "Qswd123!!AlNb1@") {}
-//    #expect(viewModel.isAuthenticated == true)
-//    #expect(viewModel.error == nil)
-//}
+@Test func testSuccessfulSignIn() async {
+    let mockAuth: AuthServiceProtocol = MockAuthService()
+    let viewModel = AuthViewModel(authService: mockAuth)
+    
+    await viewModel.signIn(email: "test@example.com", password: "password123")
+    
+    #expect(viewModel.isAuthenticated == true)
+    #expect(viewModel.error == nil)
+}
 
 @Test func testSignUpWithEmptyName() async {
     let viewModel = AuthViewModel()
