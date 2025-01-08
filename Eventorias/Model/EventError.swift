@@ -24,6 +24,9 @@ enum EventError: LocalizedError, Identifiable, Hashable {
     case imageProcessingFailed
     case unauthorizedAccess
     case unknownError(String)
+    // pour mock (pour le moment)
+    case signInFailed
+    case signUpFailed
     
     var errorDescription: String? {
         switch self {
@@ -53,6 +56,10 @@ enum EventError: LocalizedError, Identifiable, Hashable {
             return "Please sign in to continue"
         case .unknownError(let message):
             return message
+        case .signInFailed:
+            return "sign in failed"
+        case .signUpFailed:
+            return "sign up failed"
         }
     }
     

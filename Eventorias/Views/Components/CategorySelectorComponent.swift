@@ -32,6 +32,7 @@ struct CategorySelectorComponent: View {
                                         .fill(selectedCategory == category ? .evRed : .evBackground)
                                 )
                         }
+                        .accessibilityIdentifier(AccessID.eventAddCategory(category.rawValue.lowercased()))
                         .accessibilityLabel("Category: \(category.rawValue)")
                         .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
                         .accessibilityHint("Double tap to select this category")

@@ -32,8 +32,8 @@ struct SortMenuComponent: View {
                         }
                     }
                 }
-                .accessibilityLabel("Trier du plus récent au plus ancien")
                 .accessibilityIdentifier(AccessID.sortRecentToOld)
+                .accessibilityLabel("Trier du plus récent au plus ancien")
                 
                 Button {
                     onSortSelected(.date(ascending: true))
@@ -49,8 +49,8 @@ struct SortMenuComponent: View {
                         }
                     }
                 }
-                .accessibilityLabel("Trier du plus ancien au plus récent")
                 .accessibilityIdentifier(AccessID.sortOldToRecent)
+                .accessibilityLabel("Trier du plus ancien au plus récent")
             }
             .accessibilityIdentifier(AccessID.sortDateSection)
             
@@ -69,8 +69,8 @@ struct SortMenuComponent: View {
                         }
                     }
                 }
-                .accessibilityLabel("Afficher toutes les catégories")
                 .accessibilityIdentifier("sort-all-categories")
+                .accessibilityLabel("Afficher toutes les catégories")
                 
                 ForEach(EventCategory.allCases, id: \.self) { category in
                     Button {
@@ -80,20 +80,33 @@ struct SortMenuComponent: View {
                         HStack {
                             Text(category.rawValue)
                             Spacer()
-                            if case .category(let selectedCategory) = selectedSort, selectedCategory == category {
+                            if checkCategorySelected(category) {
                                 Image(systemName: "checkmark")
                                     .foregroundColor(.evMain)
                                     .accessibilityHidden(true)
                             }
+//                            if case .category(let selectedCategory) = selectedSort, selectedCategory == category {
+//                                Image(systemName: "checkmark")
+//                                    .foregroundColor(.evMain)
+//                                    .accessibilityHidden(true)
+//                            }
                         }
                     }
+                    .accessibilityIdentifier(AccessID.eventAddCategory(category.rawValue))
                     .accessibilityLabel("Filtrer par catégorie \(category.rawValue)")
-                    .accessibilityIdentifier(AccessID.sortCategory(category.rawValue))
                 }
             }
             .accessibilityIdentifier(AccessID.sortCategorySection)
         }
         .accessibilityElement(children: .contain)
+//        Text("")
+    }
+    
+    private func checkCategorySelected(_ category: EventCategory) -> Bool {
+        guard case .category(let selectedCategory) = selectedSort else {
+            return false
+        }
+        return selectedCategory == category
     }
 }
 

@@ -21,7 +21,7 @@ class EventViewModel: ObservableObject {
     @Published var error: EventError?
     @Published var isLoading = false
     @Published var searchText = ""
-    // NEW
+
     @Published var selectedItem: PhotosPickerItem? {
         didSet {
             handleSelectedItem()
@@ -45,6 +45,8 @@ class EventViewModel: ObservableObject {
         Event(
             title: "",
             description: "",
+            // pour test UI afin d'avoir un nouvel évènment visible sans scroller...
+//            date: Calendar.current.date(from: DateComponents(year: 2024, month: 12, day: 23))!
             date: Date(),
             location: EventLocation(
                 address: "",
@@ -57,8 +59,8 @@ class EventViewModel: ObservableObject {
         )
     }
     
+    @MainActor
     func resetNewEvent() {
-        // Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
         newEvent = Self.createEmptyEvent()
         selectedImage = nil
         selectedItem = nil
@@ -194,11 +196,12 @@ class EventViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     private func addEventAsync() async throws {
         guard isFormValid else {
             throw EventError.invalidEventData
         }
-        // Publishing changes from background threads is not allowed; make sure to publish values from the main thread (via operators like receive(on:)) on model updates.
+
         newEvent.creatorId = Auth.auth().currentUser?.uid ?? ""
         newEvent.createdAt = Date()
         

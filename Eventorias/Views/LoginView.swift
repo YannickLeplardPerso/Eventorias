@@ -43,7 +43,7 @@ struct LoginView: View {
                 .cornerRadius(8)
                 .padding(.horizontal, 74)
             }
-            .accessibilityIdentifier("email-signin-button")
+            .accessibilityIdentifier(AccessID.signSheet)
             .accessibilityHint("Opens sign in form")
             
             Spacer()

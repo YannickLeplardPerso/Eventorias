@@ -45,9 +45,9 @@ struct EventListView: View {
                                     .padding(.horizontal)
                                     .padding(.vertical, 4)
                             }
+                            .accessibilityIdentifier(AccessID.eventCard(event.id ?? ""))
                             .accessibilityLabel("Event: \(event.title)")
                             .accessibilityHint("Double tap to view event details")
-                            .accessibilityIdentifier(AccessID.eventCard(event.id ?? ""))
                             .listRowInsets(EdgeInsets())
                             .listRowSeparator(.hidden)
                         }
@@ -73,14 +73,15 @@ struct EventListView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 15))
                             .shadow(radius: 4)
                     }
+                    .accessibilityIdentifier(AccessID.eventAdd)
                     .accessibilityLabel("Add new event")
                     .accessibilityHint("Opens form to create new event")
-                    .accessibilityIdentifier(AccessID.eventAdd)
                     .padding(.trailing, 20)
                     .padding(.bottom, 70)
                 }
             }
         }
+        .accessibilityIdentifier(AccessID.eventView)
         .onAppear {
             viewModel.fetchEvents()
         }

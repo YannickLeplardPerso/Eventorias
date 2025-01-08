@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+
+
+// Attention : pour les AccessIdentifiers :
+// si isMultiline c'est textViews au lieu de textFields
 struct CustomTextFieldComponent: View {
     let title: String
     let placeholder: String
@@ -82,7 +86,6 @@ struct CustomTextFieldComponent: View {
             }
             .background(.evBackground)
             .cornerRadius(6)
-            .accessibilityIdentifier(AccessID.customTextField(title))
         }
     }
 }

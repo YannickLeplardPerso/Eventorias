@@ -25,7 +25,7 @@ struct AddEventView: View {
                         placeholder: "New event",
                         text: $viewModel.newEvent.title
                     )
-                    .accessibilityIdentifier("event-title-input")
+                    .accessibilityIdentifier(AccessID.eventAddTitle)
 
                     CustomTextFieldComponent(
                         title: "Description",
@@ -33,8 +33,8 @@ struct AddEventView: View {
                         text: $viewModel.newEvent.description,
                         isMultiline: true
                     )
-                    .accessibilityIdentifier("event-description-input")
-
+                    .accessibilityIdentifier(AccessID.eventAddDescription)
+                    
                     HStack(spacing: 18) {
                         CustomDatePickerComponent(
                             title: "Date",
@@ -56,14 +56,13 @@ struct AddEventView: View {
                         placeholder: "Enter full address",
                         text: $viewModel.newEvent.location.address
                     )
+                    .accessibilityIdentifier(AccessID.eventAddAddress)
                     .textContentType(.fullStreetAddress)
-                    .accessibilityIdentifier("event-address-input")
 
                     CategorySelectorComponent(
                         selectedCategory: $viewModel.newEvent.category,
                         title: "Category"
                     )
-                    .accessibilityIdentifier("category-selector")
                     
                     HStack(spacing: 15) {
                         Spacer()
@@ -141,9 +140,9 @@ struct AddEventView: View {
                         .cornerRadius(10)
                 }
             }
+            .accessibilityIdentifier(AccessID.eventCreate)
             .accessibilityLabel("Create event")
             .accessibilityHint(viewModel.isFormValid ? "Double tap to create event" : "Form is incomplete")
-            .accessibilityIdentifier("create-event-button")
             .padding(.horizontal)
             .padding(.bottom, 20)
         }

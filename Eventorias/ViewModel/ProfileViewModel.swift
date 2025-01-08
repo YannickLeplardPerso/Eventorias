@@ -22,7 +22,7 @@ class ProfileViewModel: ObservableObject {
     @Published var profileImageUrl: String?
     @Published var isLoading: Bool = false
     @Published var error: EventError?
-    // NEW
+
     @Published var selectedItem: PhotosPickerItem? {
         didSet {
             handleSelectedItem()
@@ -88,7 +88,6 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    // NEW
     private func handleSelectedItem() {
         guard let item = selectedItem else { return }
         

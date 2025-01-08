@@ -153,9 +153,9 @@ struct EventDetailView: View {
                     .accessibilityAddTraits(.isHeader)
             }
         }
+        .accessibilityIdentifier(AccessID.detailView)
         .onAppear {
             viewModel.loadCreatorInfo(for: event.creatorId)
-//            viewModel.initializeCameraPosition(for: event)
         }
         .eventAlert(error: $viewModel.error)
     }

@@ -12,25 +12,6 @@ import FirebaseFirestore
 
 
 
-//enum EventCategory: String, Codable, CaseIterable {
-//    case music = "Music"
-//    case culture = "Culture"
-//    case sports = "Sport"
-//    case business = "Business"
-//    case other = "Other"
-//}
-
-//enum SortOption {
-//    case date(ascending: Bool)
-//    case category(EventCategory?)  // nil pour toutes les catégories
-//}
-
-//struct EventLocation: Codable {
-//    var address: String
-//    var latitude: Double?
-//    var longitude: Double?
-//}
-
 struct Event: Identifiable, Codable {
     @DocumentID var id: String?
     var title: String

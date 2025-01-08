@@ -20,7 +20,7 @@ class AuthViewModel: ObservableObject {
         self.authService = authService
     }
 //    private let auth = Auth.auth()
-    
+    @MainActor
     func signIn(email: String, password: String) async {
         guard !email.isEmpty else {
             error = .invalidEmail
@@ -34,16 +34,18 @@ class AuthViewModel: ObservableObject {
         isLoading = true
         
         do {
-            let user = try await authService.signIn(email: email, password: password)
-//            isAuthenticated = true
-            isAuthenticated = (user.uid.isEmpty == false)
+            _ = try await authService.signIn(email: email, password: password)
+            isAuthenticated = true
+            error = nil
         } catch {
+            isAuthenticated = false
             self.error = .unknownError("signIn failed: \(error.localizedDescription)")
         }
         
         isLoading = false
     }
     
+    @MainActor
     func signUp(email: String, password: String, name: String) async {
         guard !name.isEmpty else {
             error = .nameRequired
@@ -63,7 +65,9 @@ class AuthViewModel: ObservableObject {
         do {
             _ = try await authService.signUp(email: email, password: password, name: name)
             isAuthenticated = true
+            error = nil
         } catch {
+            isAuthenticated = false
             self.error = .unknownError("signUp failed: \(error.localizedDescription)")
         }
 
