@@ -155,7 +155,9 @@ struct EventDetailView: View {
         }
         .accessibilityIdentifier(AccessID.detailView)
         .onAppear {
-            viewModel.loadCreatorInfo(for: event.creatorId)
+            Task {
+                await viewModel.loadCreatorInfo(for: event.creatorId)
+            }
         }
         .eventAlert(error: $viewModel.error)
     }

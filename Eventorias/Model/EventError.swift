@@ -22,6 +22,7 @@ enum EventError: LocalizedError, Identifiable, Hashable {
     case fetchEventsFailed
     case imageUploadFailed
     case imageProcessingFailed
+    case profileUpdateFailed
     case unauthorizedAccess
     case unknownError(String)
     // pour mock (pour le moment)
@@ -52,6 +53,8 @@ enum EventError: LocalizedError, Identifiable, Hashable {
             return "Failed to upload image. Please try again"
         case .imageProcessingFailed:
             return "Failed to process image"
+        case .profileUpdateFailed:
+            return "Failed to update profile. Please try again"
         case .unauthorizedAccess:
             return "Please sign in to continue"
         case .unknownError(let message):

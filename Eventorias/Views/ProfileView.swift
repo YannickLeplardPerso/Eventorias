@@ -61,7 +61,9 @@ struct ProfileView: View {
             .disabled(true)
             .padding(.horizontal)
             .onChange(of: viewModel.userName) { oldValue, newValue in
-                viewModel.updateUserProfile()
+                Task {
+                    await viewModel.updateUserProfile()
+                }
             }
             
             CustomTextFieldComponent(
@@ -89,6 +91,12 @@ struct ProfileView: View {
             .padding(.horizontal)
                     
             Spacer()
+        }
+        // ya
+        .onAppear {
+            Task {
+                await viewModel.reloadUserProfile()
+            }
         }
         .confirmationDialog("Choose Photo", isPresented: $showActionSheet) {
             Button("Photo Library") {

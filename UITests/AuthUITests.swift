@@ -85,9 +85,7 @@ class EventoriasUITests: XCTestCase {
         
         titleTextField.tap()
         titleTextField.typeText(testEvent.title)
-        
-        print("testEvent title: \(testEvent.title)")
-        
+                
         descriptionTextField.tap()
         descriptionTextField.typeText(testEvent.description)
         

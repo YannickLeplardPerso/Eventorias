@@ -85,11 +85,6 @@ struct SortMenuComponent: View {
                                     .foregroundColor(.evMain)
                                     .accessibilityHidden(true)
                             }
-//                            if case .category(let selectedCategory) = selectedSort, selectedCategory == category {
-//                                Image(systemName: "checkmark")
-//                                    .foregroundColor(.evMain)
-//                                    .accessibilityHidden(true)
-//                            }
                         }
                     }
                     .accessibilityIdentifier(AccessID.eventAddCategory(category.rawValue))
@@ -99,7 +94,6 @@ struct SortMenuComponent: View {
             .accessibilityIdentifier(AccessID.sortCategorySection)
         }
         .accessibilityElement(children: .contain)
-//        Text("")
     }
     
     private func checkCategorySelected(_ category: EventCategory) -> Bool {

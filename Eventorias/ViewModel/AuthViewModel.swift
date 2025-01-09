@@ -19,7 +19,7 @@ class AuthViewModel: ObservableObject {
     init(authService: AuthServiceProtocol = FirebaseAuthService()) {
         self.authService = authService
     }
-//    private let auth = Auth.auth()
+
     @MainActor
     func signIn(email: String, password: String) async {
         guard !email.isEmpty else {

@@ -22,93 +22,34 @@ class ProfileViewModel: ObservableObject {
     @Published var profileImageUrl: String?
     @Published var isLoading: Bool = false
     @Published var error: EventError?
-
+    
     @Published var selectedItem: PhotosPickerItem? {
         didSet {
-            handleSelectedItem()
+            if let item = selectedItem {
+                Task { await updateProfilePicture(item) }
+            }
         }
     }
+    
+    //    @Published var selectedItem: PhotosPickerItem? {
+    //        didSet {
+    //            Task { await handleSelectedItem() }
+    //        }
+    //    }
     
     private let storage = Storage.storage()
+    private let db = Firestore.firestore()
     
-    init() {
+    private let authService: AuthServiceProtocol
+    init(authService: AuthServiceProtocol = FirebaseAuthService()) {
+        self.authService = authService
         loadUserProfile()
-    }
-    
-    func updateUserProfile() {
-        guard let user = Auth.auth().currentUser else {
-            error = .unauthorizedAccess
-            return
-        }
-        
-        let changeRequest = user.createProfileChangeRequest()
-        changeRequest.displayName = userName
-        
-        changeRequest.commitChanges { error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.error = .unknownError("updateUserProfile: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
-    private func uploadProfileImage(_ image: UIImage) {
-        guard let userId = Auth.auth().currentUser?.uid,
-              let imageData = image.jpegData(compressionQuality: 0.5) else {
-            error = .imageProcessingFailed
-            return
-        }
-        
-        isLoading = true
-        let storageRef = storage.reference().child("profile_images/\(userId).jpg")
-        
-        storageRef.putData(imageData, metadata: nil) { metadata, error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    self.error = .unknownError("uploadProfileImage: \(error.localizedDescription)")
-                }
-                return
-            }
-            
-            storageRef.downloadURL { url, error in
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    if let error = error {
-                        self.error = .unknownError("uploadProfileImage failed: \(error.localizedDescription)")
-                        return
-                    }
-                    
-                    if let url = url {
-                        self.updateProfileImage(url)
-                    }
-                }
-            }
-        }
-    }
-    
-    private func handleSelectedItem() {
-        guard let item = selectedItem else { return }
-        
         Task {
-            do {
-                if let data = try await item.loadTransferable(type: Data.self),
-                   let image = UIImage(data: data) {
-                    await MainActor.run {
-                        self.selectedImage = image
-                        self.uploadProfileImage(image)
-                    }
-                }
-            } catch {
-                await MainActor.run {
-                    self.error = .imageProcessingFailed
-                }
-            }
+            await reloadUserProfile()
         }
     }
     
-    private func loadUserProfile() {
+    func loadUserProfile() {
         if let user = Auth.auth().currentUser {
             userEmail = user.email ?? ""
             userName = user.displayName ?? ""
@@ -116,38 +57,86 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    private func updateProfileImage(_ url: URL) {
-        guard let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest() else {
+    @MainActor
+    func reloadUserProfile() async {
+        guard let user = Auth.auth().currentUser else {
             error = .unauthorizedAccess
             return
         }
-
-        changeRequest.photoURL = url
-        changeRequest.commitChanges { [weak self] error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self?.error = .unknownError("updateProfileImage failed: \(error.localizedDescription)")
-                    return
-                }
-                
-                guard let userId = Auth.auth().currentUser?.uid else {
-                    self?.error = .unauthorizedAccess
-                    return
-                }
-                
-                let db = Firestore.firestore()
-                db.collection("users").document(userId).setData([
-                    "profileImageUrl": url.absoluteString
-                ], merge: true) { error in
-                    DispatchQueue.main.async {
-                        if let error = error {
-                            self?.error = .unknownError("updateProfileImage failed: \(error.localizedDescription)")
-                        } else {
-                            self?.profileImageUrl = url.absoluteString
-                        }
-                    }
-                }
+        
+        do {
+            try await user.reload()
+            loadUserProfile()
+        } catch {
+            self.error = .unknownError("reloadUserProfile: \(error.localizedDescription)")
+        }
+    }
+    
+    func updateUserProfile() async {
+        guard let user = Auth.auth().currentUser else {
+            error = .unauthorizedAccess
+            return
+        }
+        
+        do {
+            let changeRequest = user.createProfileChangeRequest()
+            changeRequest.displayName = userName
+            try await changeRequest.commitChanges()
+            //            try await user.reload()
+            await reloadUserProfile()
+        } catch {
+            self.error = .unknownError("updateUserProfile: \(error.localizedDescription)")
+        }
+    }
+    @MainActor
+    func updateProfilePicture(_ item: PhotosPickerItem) async {
+        do {
+            guard let data = try await item.loadTransferable(type: Data.self),
+                  let image = UIImage(data: data) else {
+                error = .imageProcessingFailed
+                return
             }
+            
+            isLoading = true
+            selectedImage = image
+            
+            guard let userId = Auth.auth().currentUser?.uid,
+                  let imageData = image.jpegData(compressionQuality: 0.5) else {
+                error = .imageProcessingFailed
+                isLoading = false
+                return
+            }
+            
+            let storageRef = storage.reference().child("profile_images/\(userId).jpg")
+            // S'assurer que l'upload est terminé
+            let metadata = StorageMetadata()
+            metadata.contentType = "image/jpeg"
+            _ = try await storageRef.putDataAsync(imageData, metadata: metadata)  // Attendre la fin de l'upload
+            let url = try await storageRef.downloadURL()
+            
+            guard let user = Auth.auth().currentUser else {
+                error = .unauthorizedAccess
+                isLoading = false
+                return
+            }
+            
+            // Mettre à jour Auth
+            let changeRequest = user.createProfileChangeRequest()
+            changeRequest.photoURL = url
+            try await changeRequest.commitChanges()
+            try await user.reload()
+            
+            // Mettre à jour Firestore
+            try await db.collection("users").document(user.uid).setData([
+                "profileImageUrl": url.absoluteString
+            ], merge: true)
+            
+            // Mettre à jour le ViewModel
+            profileImageUrl = url.absoluteString
+            isLoading = false
+        } catch {
+            self.error = .profileUpdateFailed
+            isLoading = false
         }
     }
 }

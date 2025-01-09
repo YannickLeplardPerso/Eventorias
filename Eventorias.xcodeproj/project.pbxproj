@@ -55,10 +55,10 @@
 				AuthViewModelTests.swift,
 				EventViewModelTests.swift,
 				Mocks/MockAuthService.swift,
-				Mocks/MockUser.swift,
+				Mocks/TestEvent.swift,
+				Mocks/TestEventData.swift,
+				Mocks/TestUser.swift,
 				ProfileViewModelTests.swift,
-				TestEvent.swift,
-				TestUser.swift,
 			);
 			target = 2A7BB3F12D1089B8005CFC39 /* EventoriasTests */;
 		};
@@ -73,8 +73,8 @@
 		2A66867C2D29627E008F77BF /* Exceptions for "Tests" folder in "EventoriasUITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				TestEvent.swift,
-				TestUser.swift,
+				Mocks/TestEvent.swift,
+				Mocks/TestUser.swift,
 			);
 			target = 2A8A4DD52D22D982001DCE65 /* EventoriasUITests */;
 		};
@@ -84,10 +84,10 @@
 				AuthViewModelTests.swift,
 				EventViewModelTests.swift,
 				Mocks/MockAuthService.swift,
-				Mocks/MockUser.swift,
+				Mocks/TestEvent.swift,
+				Mocks/TestEventData.swift,
+				Mocks/TestUser.swift,
 				ProfileViewModelTests.swift,
-				TestEvent.swift,
-				TestUser.swift,
 			);
 			target = 2A1B70032CE10D7000089D4F /* Eventorias */;
 		};
@@ -532,7 +532,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = "13 en cours";
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;
@@ -568,7 +568,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = "13 en cours";
 				DEVELOPMENT_ASSET_PATHS = "\"Eventorias/Preview Content\"";
 				DEVELOPMENT_TEAM = 9L643QCQAN;
 				ENABLE_PREVIEWS = YES;

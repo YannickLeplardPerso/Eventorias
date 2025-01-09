@@ -11,18 +11,6 @@ import Testing
 
 
 
-//struct TestUser {
-//    let name: String
-//    let email: String
-//    let password: String
-//    
-//    static let valid = TestUser(
-//        name: "Yannick TEST",
-//        email: "yannick@example.com",
-//        password: "StrongP@ssw0rd42!"
-//    )
-//}
-
 struct AuthViewModelTests {
     @Test func testSignInWithEmptyEmail() async {
         let viewModel = AuthViewModel()

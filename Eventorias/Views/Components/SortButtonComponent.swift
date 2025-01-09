@@ -52,27 +52,6 @@ struct SortButtonComponent: View {
 }
 
 
-//struct SortButtonComponent_Previews: PreviewProvider {
-//    static var previews: some View {
-//        struct PreviewWrapper: View {
-//            @State private var selectedSort: SortOption = .date(ascending: true)
-//            
-//            var body: some View {
-//                VStack {
-//                    SortButtonComponent(
-//                        selectedSort: $selectedSort,
-//                        onSortSelected: { newSort in
-//                            selectedSort = newSort
-//                        }
-//                    )
-//                }
-//                .padding()
-//            }
-//        }
-//        
-//        return PreviewWrapper()
-//    }
-//}
 
 #Preview("Sort Button") {
     struct PreviewWrapper: View {

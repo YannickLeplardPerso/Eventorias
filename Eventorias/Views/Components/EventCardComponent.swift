@@ -12,11 +12,10 @@ import FirebaseFirestore
 
 struct EventCardComponent: View {
     let event: Event
-    @State private var creatorPhotoURL: String?
     
     var body: some View {
         HStack {
-            if let photoURL = creatorPhotoURL,
+            if let photoURL = event.creatorImageUrl, 
                let url = URL(string: photoURL) {
                 AsyncImage(url: url) { phase in
                     switch phase {
@@ -82,24 +81,10 @@ struct EventCardComponent: View {
                     .accessibilityHidden(true)
             }
         }
-        .onAppear {
-            loadCreatorInfo()
-        }
         .background(.evBackground)
         .cornerRadius(8)
         .accessibilityElement(children: .contain)
         .accessibilityAddTraits(.isButton)
-    }
-    
-    private func loadCreatorInfo() {
-        let db = Firestore.firestore()
-        db.collection("users").document(event.creatorId).getDocument { document, error in
-            if let document = document, document.exists {
-                DispatchQueue.main.async {
-                    creatorPhotoURL = document.data()?["profileImageUrl"] as? String
-                }
-            }
-        }
     }
     
     private var fallbackProfileImage: some View {

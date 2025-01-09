@@ -24,7 +24,9 @@ class EventViewModel: ObservableObject {
 
     @Published var selectedItem: PhotosPickerItem? {
         didSet {
-            handleSelectedItem()
+            Task {
+                await handleSelectedItem()
+            }
         }
     }
     
@@ -123,36 +125,58 @@ class EventViewModel: ObservableObject {
         newEvent.location.longitude != nil
     }
     
+    @MainActor
     func fetchEvents() {
         db.collection("events")
             .order(by: "date")
-            .addSnapshotListener { snapshot, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        self.error = .unknownError("fetchEvents: \(error.localizedDescription)")
-                        return
+            .addSnapshotListener { [weak self] snapshot, error in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    self.error = .unknownError("fetchEvents: \(error.localizedDescription)")
+                    return
+                }
+                
+                guard let snapshot = snapshot else {
+                    self.error = .fetchEventsFailed
+                    return
+                }
+                
+                // D'abord décoder les événements
+                let decodedEvents = snapshot.documents.compactMap { document in
+                    do {
+                        let event = try document.data(as: Event.self)
+                        return event
+                    } catch {
+                        self.error = .unknownError("Unable to load some events: \(error.localizedDescription)")
+                        return nil
                     }
-                    
-                    guard let snapshot = snapshot else {
-                        self.error = .fetchEventsFailed
-                        return
-                    }
-                    
-                    let decodedEvents = snapshot.documents.compactMap { document in
-                        do {
-                            return try document.data(as: Event.self)
-                        } catch {
-                            self.error = .unknownError("Unable to load some events: \(error.localizedDescription)")
-                            return nil
+                }
+                
+                if decodedEvents.isEmpty && !snapshot.documents.isEmpty {
+                    self.error = .fetchEventsFailed
+                }
+                
+                self.events = decodedEvents
+                
+                // Puis charger les infos des créateurs
+                Task {
+                    for event in decodedEvents {
+                        if let creatorId = event.creatorId.isEmpty ? nil : event.creatorId {
+                            do {
+                                let userDoc = try await self.db.collection("users")
+                                    .document(creatorId)
+                                    .getDocument()
+                                
+                                if let profileImageUrl = userDoc.data()?["profileImageUrl"] as? String,
+                                   let index = self.events.firstIndex(where: { $0.id == event.id }) {
+                                    self.events[index].creatorImageUrl = profileImageUrl
+                                }
+                            } catch {
+                                self.error = .unknownError("Error loading creator info: \(error.localizedDescription)")
+                            }
                         }
                     }
-                    
-                    // Si on n'a décodé aucun événement alors qu'il y en avait
-                    if decodedEvents.isEmpty && !snapshot.documents.isEmpty {
-                        self.error = .fetchEventsFailed
-                    }
-                    
-                    self.events = decodedEvents
                 }
             }
     }
@@ -271,38 +295,32 @@ class EventViewModel: ObservableObject {
         return url.absoluteString
     }
     
-    func handleSelectedItem() {
+    @MainActor
+    func handleSelectedItem() async {
         guard let item = selectedItem else { return }
         
-        item.loadTransferable(type: Data.self) { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let data):
-                    if let data = data, let uiImage = UIImage(data: data) {
-                        self.selectedImage = uiImage
-                    } else {
-                        self.error = .imageProcessingFailed
-                    }
-                case .failure(let error):
-                    self.error = .unknownError("handleSelectedItem failed : \(error.localizedDescription)")
-                }
+        do {
+            if let data = try await item.loadTransferable(type: Data.self),
+               let uiImage = UIImage(data: data) {
+                selectedImage = uiImage
+            } else {
+                error = .imageProcessingFailed
             }
+        } catch {
+            self.error = .unknownError("handleSelectedItem failed : \(error.localizedDescription)")
         }
     }
     
-    func loadCreatorInfo(for eventId: String) {
-        let db = Firestore.firestore()
-        db.collection("users").document(eventId).getDocument { document, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.error = .unknownError(error.localizedDescription)
-                    return
-                }
-                
-                if let document = document, document.exists {
-                    self.creatorPhotoURL = document.data()?["profileImageUrl"] as? String
-                }
+    @MainActor
+    func loadCreatorInfo(for eventId: String) async {
+        do {
+            let document = try await db.collection("users").document(eventId).getDocument()
+            
+            if document.exists {
+                creatorPhotoURL = document.data()?["profileImageUrl"] as? String
             }
+        } catch {
+            self.error = .unknownError(error.localizedDescription)
         }
     }
 }
